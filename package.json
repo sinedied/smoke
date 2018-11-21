@@ -1,0 +1,45 @@
+{
+  "name": "smoke",
+  "version": "1.0.0",
+  "description": "Simple yet powerful file-based mock server",
+  "main": "index.js",
+  "scripts": {
+    "lint": "xo",
+    "lint:fix": "xo --fix",
+    "start": "node smoke.js",
+    "test": "node smoke.js test"
+  },
+  "keywords": [
+    "mock",
+    "server",
+    "api",
+    "file",
+    "json",
+    "rest"
+  ],
+  "author": "Yohan Lasorsa",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "fs-extra": "^7.0.1",
+    "globby": "^7.1.1",
+    "lodash.template": "^4.4.0",
+    "minimist": "^1.2.0",
+    "multer": "^1.4.1",
+    "path-to-regexp": "^2.4.0"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "xo": "^0.23.0"
+  },
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "envs": [
+      "node",
+      "jest"
+    ],
+    "ignores": ["test/**/*"]
+  }
+}

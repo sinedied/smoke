@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+const cli = require('../cli.js');
+cli.run(process.argv.slice(2));

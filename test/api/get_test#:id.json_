@@ -1,0 +1,10 @@
+{
+  "statusCode:": 200,
+  "headers": {
+    "content-type": "text/html"
+  },
+  "body": {
+    "message": "<h1>Test [id:{{params.id}}] result</h1>",
+    "query": {{JSON.stringify(query)}}
+  }
+}

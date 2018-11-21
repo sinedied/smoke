@@ -1,0 +1,8 @@
+test/
+.idea/
+.vscode/
+.gitignore
+*.spec.js
+.travis.yml
+.DS_Store
+Thumbs.db

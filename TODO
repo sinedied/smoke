@@ -1,0 +1,11 @@
+- init/update from swagger spec
+
+- file based
+- inject vars/mustache template
+- global switch error/ok
+- auto get mocks from real API
+- conf from json/rc/package -> cosmiconf
+- status code from file name
+- set from file suffix ie, get_hello.error.json
+
+- console logger > express
