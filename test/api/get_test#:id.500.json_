@@ -1,7 +1,10 @@
 {
-  "statusCode:": 500,
-  "headers: {
+  "statusCode": 500,
+  "headers": {
     "content-type": "text/html"
   },
-  "body": "<h1>Error! {{JSON.stringify(query)}} [id:{{params.id}}] result</h1>",
+  "body": {
+    "message": "<h1>Test [id:{{params.id}}] result</h1>",
+    "query": {{JSON.stringify(query)}}
+  }
 }
