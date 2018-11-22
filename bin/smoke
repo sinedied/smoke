@@ -1,3 +1,2 @@
 #!/usr/bin/env node
-const cli = require('../cli.js');
-cli.run(process.argv.slice(2));
+require('../cli.js')(process.argv.slice(2));

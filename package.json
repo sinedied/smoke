@@ -2,12 +2,15 @@
   "name": "smoke",
   "version": "1.0.0",
   "description": "Simple yet powerful file-based mock server",
-  "main": "index.js",
+  "main": "smoke.js",
+  "bin": {
+    "smoke": "./bin/smoke"
+  },
   "scripts": {
     "lint": "xo",
     "lint:fix": "xo --fix",
-    "start": "node smoke.js",
-    "test": "node smoke.js test"
+    "start": "smoke test",
+    "test": "smoke test"
   },
   "keywords": [
     "mock",
