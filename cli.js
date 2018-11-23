@@ -2,16 +2,18 @@ const minimist = require('minimist');
 
 const {createServer, startServer} = require('./smoke');
 
-const help = `Usage: smoke [<mocks_folder>] [options]\n`;
+const help = `Usage: smoke [<mocks_folder>] [options]
+Options:
+  -p, --port <num>        Server port           [default: 3000]
+  -h, --host <host>       Server host           [default: "localhost"]
+  -s, --set <name>        Mocks set to use      [default: none]
+  -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
+  -l, --logs              Enable server logs
+  -v, --version           Show version
+  --help                  Show help
+`;
 
 // TODO CLI params
-// <basePath>
-// -p, --port 123
-// -h, --host xx
-// -s, --set <name>
-// -n, --not-found <mockFile>
-// -l, --logs
-
 // -i, --import <swagger URL>
 // -u, --use-headers <json> (for swagger import)
 // -d, --dir-level N use N dir levels for import (default: 1)
