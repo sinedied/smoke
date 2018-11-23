@@ -26,4 +26,12 @@ message=test
 
 http://localhost:3000/api/version
 
+###
+
+http://localhost:3000/notFound
+
+###
+
+http://localhost:3000/
+Accept: text/plain
 

@@ -12,7 +12,7 @@ function createServer(options) {
     port: options.port || 3000,
     host: options.host || 'localhost',
     set: options.set || null,
-    notFound: options.notFound || null,
+    notFound: options.notFound || '404.*',
     logs: options.logs || false
   };
 
@@ -34,7 +34,7 @@ function createServer(options) {
     const reqPath = req.path.substring(1);
     const method = req.method.toLowerCase();
     const data = {method, query, params: {}, headers, body, files};
-    const mocks = await getMocks(options.basePath);
+    const mocks = await getMocks(options.basePath, ['**/*', `!${options.notFound}`]);
 
     // TODO: score content-type
     let bestMatch = {match: null, mock: null, score: -1};
@@ -50,7 +50,17 @@ function createServer(options) {
     }
 
     if (bestMatch.mock === null) {
-      res.sendStatus(404);
+      // Search for 404 mocks, matching accept header
+      const notFoundMocks = await getMocks(options.basePath, [options.notFound]);
+      const types = notFoundMocks.length > 0 ? notFoundMocks.map(mock => mock.ext).filter(ext => ext) : null;
+      const accept = types && req.accepts(types);
+      const mock = accept && notFoundMocks.find(mock => mock.ext === accept);
+
+      if (mock) {
+        respondMock(res, mock, data, 404);
+      } else {
+        res.sendStatus(404);
+      }
     } else {
       const {match, mock} = bestMatch;
       // Console.log(match);
@@ -61,7 +71,7 @@ function createServer(options) {
         data.params[key.name] = match[index + 1];
       });
 
-      respondMock(res, mock, data, options.basePath);
+      respondMock(res, mock, data);
     }
   });
 }
