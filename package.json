@@ -29,6 +29,7 @@
     "globby": "^8.0.1",
     "lodash.template": "^4.4.0",
     "minimist": "^1.2.0",
+    "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "path-to-regexp": "^2.4.0"
   },

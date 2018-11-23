@@ -10,6 +10,7 @@ const help = `Usage: smoke [<mocks_folder>] [options]\n`;
 // -h, --host xx
 // -s, --set <name>
 // -n, --not-found <mockFile>
+// -l, --logs
 
 // -i, --import <swagger URL>
 // -u, --use-headers <json> (for swagger import)
@@ -19,7 +20,7 @@ function run(args) {
   const options = minimist(args, {
     number: ['port'],
     string: ['host', 'set', 'not-found'],
-    boolean: ['help', 'version'],
+    boolean: ['help', 'version', 'logs'],
     alias: {
       p: 'port',
       h: 'host',
@@ -36,7 +37,8 @@ function run(args) {
     port: options.port,
     host: options.host,
     set: options.set,
-    notFound: options['not-found']
+    notFound: options['not-found'],
+    logs: options.logs
   });
 
   if (options.help) {
