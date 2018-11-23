@@ -1,11 +1,5 @@
+- support accept header for different content types
 - init/update from swagger spec
-
-x file based
-x inject vars/mustache template
-x global switch error/ok
 - auto get mocks from real API
-- conf from json/rc/package -> cosmiconf
-- status code from file name
-x set from file suffix ie, get_hello.error.json
-
-- console logger > express
+- conf from json/rc/package -> cosmiconf ?
+- status code from file name ?
