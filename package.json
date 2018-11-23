@@ -10,7 +10,8 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "start": "smoke test",
-    "test": "smoke test"
+    "test": "smoke test",
+    "postpublish": "git tag -a $npm_package_version -m \"$npm_package_version\" && git push --tags"
   },
   "keywords": [
     "mock",
