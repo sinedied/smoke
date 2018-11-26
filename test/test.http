@@ -1,15 +1,19 @@
+// Test routing and query params
 http://localhost:3000/api/test/2?debug=true
 
 ###
 
+// Test mock verb discrimination
 http://localhost:3000/hello
 
 ###
 
+// Test fallback mock with no verb specified
 POST http://localhost:3000/hello
 
 ###
 
+// Test post
 POST http://localhost:3000/api/ping
 Content-Type: application/json
 
@@ -17,6 +21,7 @@ Content-Type: application/json
 
 ###
 
+// Test post with different content-type
 POST http://localhost:3000/api/ping
 Content-Type: application/x-www-form-urlencoded
 
@@ -24,14 +29,22 @@ message=test
 
 ###
 
+// Test simple template with optional query param
 http://localhost:3000/api/version
 
 ###
 
+// Test 404
 http://localhost:3000/notFound
 
 ###
 
+// Discriminate 404 by accept header
 http://localhost:3000/
 Accept: text/plain
+
+###
+
+// Defeat Node cache for JS mocks
+http://localhost:3000/api/random
 
