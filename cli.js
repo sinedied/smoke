@@ -13,11 +13,6 @@ Options:
   --help                  Show help
 `;
 
-// TODO CLI params
-// -i, --import <swagger URL>
-// -u, --use-headers <json> (for swagger import)
-// -d, --dir-level N use N dir levels for import (default: 1)
-
 function run(args) {
   const options = minimist(args, {
     number: ['port'],
