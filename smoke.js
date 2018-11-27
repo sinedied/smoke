@@ -5,8 +5,6 @@ const multer = require('multer');
 const {getMocks} = require('./lib/mock');
 const {respondMock} = require('./lib/response');
 
-const noExtensionType = 'application/octet-stream';
-
 function createServer(options) {
   options = options || {};
   options = {
@@ -37,27 +35,25 @@ function createServer(options) {
     const method = req.method.toLowerCase();
     const data = {method, query, params: {}, headers, body, files};
     const mocks = await getMocks(options.basePath, ['**/*', `!${options.notFound}`]);
-    const matches = [];
-
-    for (const mock of mocks) {
+    const matches = mocks.reduce((allMatches, mock) => {
       const match = reqPath.match(mock.regexp);
 
       if (match) {
-        // Assume type application/octet-stream (buffer) for mocks without extension
-        const accept = req.accepts(mock.ext || noExtensionType);
+        const accept = req.accepts(mock.type);
 
         if (accept && (!mock.method || mock.method === method) && (!mock.set || mock.set === options.set)) {
           const score = (mock.method ? 1 : 0) + (mock.set ? 1 : 0);
-          matches.push({match, mock, score});
+          allMatches.push({match, mock, score});
         }
       }
-    }
+
+      return allMatches;
+    }, []);
 
     if (matches.length === 0) {
       // Search for 404 mocks, matching accept header
       const notFoundMocks = await getMocks(options.basePath, [options.notFound]);
-      // Assume type application/octet-stream (buffer) for mocks without extension
-      const types = notFoundMocks.length > 0 ? notFoundMocks.map(mock => mock.ext || noExtensionType) : null;
+      const types = notFoundMocks.length > 0 ? notFoundMocks.map(mock => mock.type) : null;
       const accept = types && req.accepts(types);
       const mock = accept && notFoundMocks.find(mock => mock.ext === accept);
 
@@ -67,12 +63,10 @@ function createServer(options) {
         res.sendStatus(404);
       }
     } else {
-      const accept = req.accepts(matches.map(match => match.mock.ext || noExtensionType));
-      // Pick best match, will never be undefined as we made sure to have an accepted mock before
-      const {match, mock} = matches
-        .filter(match => accept === (match.mock.ext || noExtensionType))
-        .sort((a, b) => b.score - a.score)[0];
+      const accept = req.accepts(matches.map(match => match.mock.type));
+      const {match, mock} = matches.filter(match => accept === match.mock.type).sort((a, b) => b.score - a.score)[0];
 
+      // Fill in route params
       mock.keys.forEach((key, index) => {
         data.params[key.name] = match[index + 1];
       });
