@@ -29,7 +29,7 @@ message=test
 
 ###
 
-// Test simple template with optional query param
+// Test template match either based on path or file name
 http://localhost:3000/api/version
 
 ###
@@ -41,10 +41,20 @@ http://localhost:3000/notFound
 
 // Discriminate 404 by accept header
 http://localhost:3000/
-Accept: text/plain
+Accept: application/json
 
 ###
 
 // Defeat Node cache for JS mocks
 http://localhost:3000/api/random
 
+###
+
+// Match any type
+http://localhost:3000/api/text
+
+###
+
+// Match only specified type
+http://localhost:3000/api/text
+Accept: text/*

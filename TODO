@@ -1,5 +1,5 @@
-- support accept header for different content types
+- write readme/doc
+
 - init/update from swagger spec
 - auto get mocks from real API
-- conf from json/rc/package -> cosmiconf ?
 - status code from file name ?
