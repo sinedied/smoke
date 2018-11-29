@@ -1,15 +1,20 @@
+// ---------------------------------------------------------------------------
+// Install REST Client extension for VS Code to use this file:
+// https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+// ---------------------------------------------------------------------------
+
 // Test routing and query params
 http://localhost:3000/api/test/2?debug=true
 
 ###
 
 // Test mock verb discrimination
-http://localhost:3000/hello
+http://localhost:3000/api/hello
 
 ###
 
 // Test fallback mock with no verb specified
-POST http://localhost:3000/hello
+POST http://localhost:3000/api/hello
 
 ###
 

@@ -3,6 +3,7 @@ const minimist = require('minimist');
 const {createServer, startServer} = require('./smoke');
 
 const help = `Usage: smoke [<mocks_folder>] [options]
+
 Options:
   -p, --port <num>        Server port           [default: 3000]
   -h, --host <host>       Server host           [default: "localhost"]
