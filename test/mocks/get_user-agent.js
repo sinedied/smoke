@@ -1,7 +1,8 @@
 module.exports = data => ({
-  statusCode: 203,
+  statusCode: 200,
   headers: {
-    'Custom-Header': 'Hey there!'
+    'Content-Type': 'text/plain',
+    'Some-Header': 'Hey there!'
   },
   body: `Your user agent is: ${data.headers['user-agent']}`
 });
