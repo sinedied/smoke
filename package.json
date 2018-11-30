@@ -10,7 +10,7 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "start": "smoke test/mocks",
-    "test": "smoke test/mocks",
+    "test": "npm run lint -s",
     "postpublish": "git tag -a $npm_package_version -m \"$npm_package_version\" && git push --tags"
   },
   "keywords": [
@@ -20,7 +20,8 @@
     "file",
     "file-based",
     "json",
-    "rest"
+    "rest",
+    "template"
   ],
   "author": "Yohan Lasorsa",
   "license": "MIT",
