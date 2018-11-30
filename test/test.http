@@ -34,6 +34,14 @@ message=test
 
 ###
 
+// Test multiple methods support
+PUT http://localhost:3000/api/ping
+Content-Type: application/json
+
+{ "message": "test" }
+
+###
+
 // Test template match either based on path or file name
 http://localhost:3000/api/version
 
