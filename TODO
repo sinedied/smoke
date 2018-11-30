@@ -1,9 +1,8 @@
-- write readme/doc
+- unit tests
 - init/update from swagger spec
-- auto get mocks from real API
-- status code from file name ?
+- auto get mocks from given URL
 
-// CLI params
-// -i, --import <swagger URL>
-// -u, --use-headers <json> (for swagger import)
-// -d, --dir-level N use N dir levels for import (default: 1)
+// -d, --download <url> download mock content from base URL
+// -u, --headers <json> use given headers for import/download
+// -i, --import <swagger_url> import mocks from Swagger spec
+// -e, --dir-level <n> use N dir levels for import (default: 1)
