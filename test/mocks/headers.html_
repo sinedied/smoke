@@ -1,0 +1,8 @@
+<html>
+  <body>
+    Request headers:
+    <ul><{ Object.keys(headers).forEach(name => { }>
+      <li>{{name}}: {{headers[name]}}</li><{ }); }>
+    </ul>
+  </body>
+<html>
