@@ -41,8 +41,8 @@ function createServer(options) {
       if (match) {
         const accept = req.accepts(mock.type);
 
-        if (accept && (!mock.method || mock.method === method) && (!mock.set || mock.set === options.set)) {
-          const score = (mock.method ? 1 : 0) + (mock.set ? 1 : 0);
+        if (accept && (!mock.methods || mock.methods.includes(method)) && (!mock.set || mock.set === options.set)) {
+          const score = (mock.methods ? 1 : 0) + (mock.set ? 1 : 0);
           allMatches.push({match, mock, score});
         }
       }
