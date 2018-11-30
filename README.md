@@ -12,16 +12,6 @@
 
 Just drop a bunch of (JSON) files in a folder and you're ready to go!
 
-**Smoke** is a file-based, convention over configuration mock server that can fill your API mocking needs without any
-complex setup. Yet, it supports many advanced features and dynamic mocks for almost any situation:
-
-- Use folders and file names to describe API routes and REST methods
-- Use templates to generate responses based on input queries and route parameters
-- Add / edit / remove mocks without restarting the server
-- Generate mocks with JavaScript for more complex responses
-- Define different mock sets to simulate various scenarii (errors...), with fallback
-- Customize headers and status code if needed, automatically detect content-type if not specified
-
 #### Basic mock example:
 1. Create a file named `get_api#hello.json`:
     ```json
@@ -31,6 +21,18 @@ complex setup. Yet, it supports many advanced features and dynamic mocks for alm
     ```
 2. Start the server: `smoke`
 3. Test the mock: `curl http://localhost:3000/api/hello`
+
+#### Features
+
+**Smoke** is a file-based, convention over configuration mock server that can fill your API mocking needs without any
+complex setup. Yet, it supports many advanced features and dynamic mocks for almost any situation:
+
+- Use folders and file names to describe API routes and REST methods
+- Use templates to generate responses based on input queries and route parameters
+- Add / edit / remove mocks without restarting the server
+- Generate mocks with JavaScript for more complex responses
+- Define different mock sets to simulate various scenarii (errors...), with fallback
+- Customize headers and status code if needed, automatically detect content-type if not specified
 
 ## Installation
 
