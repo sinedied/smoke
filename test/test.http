@@ -68,3 +68,8 @@ Accept: text/*
 
 // Test template with JS evaluation
  http://localhost:3000/headers
+
+###
+
+// JS mock with custom status and headers
+http://localhost:3000/user-agent
