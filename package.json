@@ -10,7 +10,7 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "start": "smoke test/mocks",
-    "test": "npm run lint -s",
+    "test": "xo && jest",
     "postpublish": "git tag -a $npm_package_version -m \"$npm_package_version\" && git push --tags"
   },
   "keywords": [
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "jest": "^23.6.0",
+    "supertest": "^3.3.0",
     "xo": "^0.23.0"
   },
   "xo": {
@@ -49,7 +50,7 @@
       "jest"
     ],
     "ignores": [
-      "test/**/*"
+      "test/mocks/**/*"
     ]
   },
   "engines": {
