@@ -13,13 +13,13 @@
 Just drop a bunch of (JSON) files in a folder and you're ready to go!
 
 #### Basic mock example:
-1. Create a file named `get_api#hello.json`:
+1. Start the server: `smoke`
+2. Create a file named `get_api#hello.json`:
     ```json
     {
       "message": "hello world!"
     }
     ```
-2. Start the server: `smoke`
 3. Test the mock: `curl http://localhost:3000/api/hello`
 
 #### Features
@@ -162,15 +162,15 @@ By default all mocks responses are sent with a status code `200` (OK), or `204` 
 
 You can customize the response status and (optionally) headers with JSON and [JavaScript](#javascript-mocks) files,
 using this syntax:
-```json
+```js
 {
   "statusCode": 400,
   "body": {
     "error": "Bad request"
   },
-  // can be omitted, only use if you want to customize headers
+  // headers can be omitted, only use if you want to customize them
   "headers": {
-    "Content-Type": "application/json"
+    "Content-Type": "text/plain"
   } 
 }
 ```
