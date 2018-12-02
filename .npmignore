@@ -2,6 +2,7 @@ test/
 .idea/
 .vscode/
 .gitignore
+.editorconfig
 *.spec.js
 .travis.yml
 .DS_Store
