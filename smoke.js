@@ -42,7 +42,7 @@ function createServer(options) {
         const accept = req.accepts(mock.type);
 
         if (accept && (!mock.methods || mock.methods.includes(method)) && (!mock.set || mock.set === options.set)) {
-          const score = (mock.methods ? 1 : 0) + (mock.set ? 1 : 0);
+          const score = (mock.methods ? 1 : 0) + (mock.set ? 2 : 0);
           allMatches.push({match, mock, score});
         }
       }
