@@ -210,3 +210,13 @@ module.exports = data => ({
   body: `Your user agent is: ${data.headers['user-agent']}`
 });
 ```
+
+## Other mock servers
+
+If you cannot find what you need here, you might want to check out one of these other mock servers:
+
+- [JSON Server](https://github.com/typicode/json-server)
+- [mockserver](https://github.com/namshi/mockserver)
+- [node-mock-server](https://github.com/smollweide/node-mock-server)
+- [node-easymock](https://github.com/CyberAgent/node-easymock)
+- [mockserver-node](https://github.com/jamesdbloom/mockserver-node)
