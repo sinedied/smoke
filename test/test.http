@@ -81,3 +81,8 @@ Accept: text/*
 
 // JS mock with custom status and headers
 http://localhost:3000/user-agent
+
+###
+
+// Test JSON array
+http://localhost:3000/api/quotes
