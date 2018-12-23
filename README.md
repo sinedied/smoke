@@ -48,7 +48,7 @@ CLI usage is quite straightforward:
 ```
 Usage: smoke [<mocks_folder>] [options]
 
-Options:
+Base options:
   -p, --port <num>        Server port           [default: 3000]
   -h, --host <host>       Server host           [default: "localhost"]
   -s, --set <name>        Mocks set to use      [default: none]
@@ -56,6 +56,10 @@ Options:
   -l, --logs              Enable server logs
   -v, --version           Show version
   --help                  Show help
+
+Mock recording:
+  -r, --record <host>     Proxy & record requests if no mock found
+  -d, --depth <N>         Folder depth for mocks  [default: 1]
 ```
 
 ### File naming
@@ -211,9 +215,19 @@ module.exports = data => ({
 });
 ```
 
+### Mock recording
+
+To quickly create a mock set of an existing server (to allow working offline for example), you can use the
+`--record <host>` option. This will proxy every request for which a mock does not exist to the specified host, and
+record the resulting response as a mock file.
+
+You can change the maximum folder depth for mock files created this way using the `--depth` option.
+
+The recorded mock set can also be changed using the `--set` option.
+
 ## Other mock servers
 
-If you cannot find what you need here, you might want to check out one of these other mock servers:
+If you cannot find what you need here, you might want to check out one of these other NodeJS mock servers:
 
 - [JSON Server](https://github.com/typicode/json-server)
 - [mockserver](https://github.com/namshi/mockserver)
