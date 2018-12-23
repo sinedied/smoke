@@ -6,7 +6,7 @@
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> Simple yet powerful file-based mock server
+> Simple yet powerful file-based mock server with recording abilities
 
 ![demo](https://user-images.githubusercontent.com/593151/49312821-9f2cc680-f4e5-11e8-900a-117120c38422.gif)
 
@@ -33,6 +33,7 @@ complex setup. Yet, it supports many advanced features and dynamic mocks for alm
 - Generate mocks with JavaScript for more complex responses
 - Define different mock sets to simulate various scenarii (errors...), with fallback
 - Customize headers and status code if needed, automatically detect content-type if not specified
+- Generate mocks quickly by recording from an existing server
 
 ## Installation
 
@@ -175,6 +176,19 @@ using this syntax:
   // headers can be omitted, only use if you want to customize them
   "headers": {
     "Content-Type": "text/plain"
+  } 
+}
+```
+
+You can also use non-string content type if you encode the content as a base64 string in the `body` property and add
+the property `"buffer": true` to the mock:
+```js
+{
+  "statusCode": 200,
+  "body": "U21va2Ugcm9ja3Mh",
+  "buffer": true,
+  "headers": {
+    "Content-Type": "application/octet-stream"
   } 
 }
 ```
