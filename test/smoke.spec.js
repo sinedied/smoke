@@ -84,7 +84,7 @@ describe('smoke server', () => {
     });
   });
 
-  describe('should handle custom reponses', () => {
+  describe('should handle custom responses', () => {
     it('should set custom header', async () => {
       await request(app)
         .get('/api/test/1')
@@ -99,10 +99,18 @@ describe('smoke server', () => {
         .expect(500);
     });
 
-    it('should set custom response using using JS mock', async () => {
+    it('should set custom response using JS mock', async () => {
       await request(app)
         .get('/user-agent')
         .expect('Some-Header', 'Hey there!');
+    });
+
+    it('should use base64 buffer from custom response', async () => {
+      const response = await request(app)
+        .get('/api/buffer')
+        .expect(200);
+
+      expect(response.body.toString('utf8')).toBe('Smoke rocks!');
     });
   });
 
