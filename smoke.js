@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const proxy = require('express-http-proxy');
 
 const {getMocks} = require('./lib/mock');
 const {respondMock} = require('./lib/response');
+const {record} = require('./lib/recorder');
 
 function createServer(options) {
   options = options || {};
@@ -13,7 +15,9 @@ function createServer(options) {
     host: options.host || 'localhost',
     set: options.set || null,
     notFound: options.notFound || '404.*',
-    logs: options.logs || false
+    logs: options.logs || false,
+    record: options.record || null,
+    depth: typeof options.depth === 'number' ? options.depth : 1
   };
 
   const app = express()
@@ -29,7 +33,7 @@ function createServer(options) {
     app.use(morgan('dev'));
   }
 
-  return app.all('*', async (req, res) => {
+  return app.all('*', async (req, res, next) => {
     const {query, headers, body, files} = req;
     const reqPath = req.path.substring(1);
     const method = req.method.toLowerCase();
@@ -51,6 +55,17 @@ function createServer(options) {
     }, []);
 
     if (matches.length === 0) {
+      if (options.record) {
+        console.log(`No mock found for ${req.path}, proxying request to ${options.record}`);
+        return proxy(options.record, {
+          limit: '10mb',
+          userResDecorator: async (proxyRes, proxyResData, userReq) => {
+            await record(userReq, proxyRes, proxyResData, options);
+            return proxyResData;
+          }
+        })(req, res, next);
+      }
+
       // Search for 404 mocks, matching accept header
       const notFoundMocks = await getMocks(options.basePath, [options.notFound]);
       const types = notFoundMocks.length > 0 ? notFoundMocks.map(mock => mock.type) : null;
