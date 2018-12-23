@@ -1,8 +1,6 @@
-- unit tests
-- init/update from swagger spec
-- auto get mocks from given URL
+- single file mocks support (.mocks.js?)
+- express middleware support + pre response hook
+- ignore pattern
 
-// -d, --download <url> download mock content from base URL
-// -u, --headers <json> use given headers for import/download
-// -i, --import <swagger_url> import mocks from Swagger spec
-// -e, --dir-level <n> use N dir levels for import (default: 1)
+// -h, --save-headers  Save response headers
+// -g, --ignore <glob>     Files to ignore       [default: none]
