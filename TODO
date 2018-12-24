@@ -1,6 +1,2 @@
 - single file mocks support (.mocks.js?)
 - express middleware support + pre response hook
-- ignore pattern
-
-// -h, --save-headers  Save response headers
-// -g, --ignore <glob>     Files to ignore       [default: none]
