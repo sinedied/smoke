@@ -16,6 +16,7 @@ Base options:
 Mock recording:
   -r, --record <host>     Proxy & record requests if no mock found
   -d, --depth <N>         Folder depth for mocks  [default: 1]
+  -a, --save-headers      Save response headers
 `;
 
 function run(args) {
@@ -30,7 +31,8 @@ function run(args) {
       n: 'not-found',
       v: 'version',
       r: 'record',
-      d: 'depth'
+      d: 'depth',
+      a: 'save-headers'
     }
   });
   const app = createServer({
@@ -41,7 +43,8 @@ function run(args) {
     notFound: options['not-found'],
     logs: options.logs,
     record: options.record,
-    depth: options.depth
+    depth: options.depth,
+    saveHeaders: options['save-headers']
   });
 
   if (options.help) {

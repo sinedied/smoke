@@ -17,7 +17,8 @@ function createServer(options) {
     notFound: options.notFound || '404.*',
     logs: options.logs || false,
     record: options.record || null,
-    depth: typeof options.depth === 'number' ? options.depth : 1
+    depth: typeof options.depth === 'number' ? options.depth : 1,
+    saveHeaders: options.saveHeaders || false
   };
 
   const app = express()
