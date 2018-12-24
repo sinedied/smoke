@@ -9,6 +9,7 @@ Base options:
   -h, --host <host>       Server host           [default: "localhost"]
   -s, --set <name>        Mocks set to use      [default: none]
   -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
+  -g, --ignore <glob>     Files to ignore       [default: none]
   -l, --logs              Enable server logs
   -v, --version           Show version
   --help                  Show help
@@ -22,7 +23,7 @@ Mock recording:
 function run(args) {
   const options = minimist(args, {
     number: ['port', 'depth'],
-    string: ['host', 'set', 'not-found', 'record'],
+    string: ['host', 'set', 'not-found', 'record', 'ignore'],
     boolean: ['help', 'version', 'logs'],
     alias: {
       p: 'port',
@@ -32,7 +33,8 @@ function run(args) {
       v: 'version',
       r: 'record',
       d: 'depth',
-      a: 'save-headers'
+      a: 'save-headers',
+      g: 'ignore'
     }
   });
   const app = createServer({
@@ -41,6 +43,7 @@ function run(args) {
     host: options.host,
     set: options.set,
     notFound: options['not-found'],
+    ignore: options.ignore,
     logs: options.logs,
     record: options.record,
     depth: options.depth,

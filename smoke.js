@@ -15,6 +15,7 @@ function createServer(options) {
     host: options.host || 'localhost',
     set: options.set || null,
     notFound: options.notFound || '404.*',
+    ignore: ['!' + options.ignore] || [],
     logs: options.logs || false,
     record: options.record || null,
     depth: typeof options.depth === 'number' ? options.depth : 1,
@@ -39,7 +40,7 @@ function createServer(options) {
     const reqPath = req.path.substring(1);
     const method = req.method.toLowerCase();
     const data = {method, query, params: {}, headers, body, files};
-    const mocks = await getMocks(options.basePath, ['**/*', `!${options.notFound}`]);
+    const mocks = await getMocks(options.basePath, ['**/*', `!${options.notFound}`].concat(options.ignore));
     const matches = mocks.reduce((allMatches, mock) => {
       const match = reqPath.match(mock.regexp);
 
@@ -57,7 +58,7 @@ function createServer(options) {
 
     if (matches.length === 0) {
       if (options.record) {
-        console.log(`No mock found for ${req.path}, proxying request to ${options.record}`);
+        console.info(`No mock found for ${req.path}, proxying request to ${options.record}`);
         return proxy(options.record, {
           limit: '10mb',
           userResDecorator: async (proxyRes, proxyResData, userReq) => {
@@ -68,7 +69,7 @@ function createServer(options) {
       }
 
       // Search for 404 mocks, matching accept header
-      const notFoundMocks = await getMocks(options.basePath, [options.notFound]);
+      const notFoundMocks = await getMocks(options.basePath, [options.notFound].concat(options.ignore));
       const types = notFoundMocks.length > 0 ? notFoundMocks.map(mock => mock.type) : null;
       const accept = types && req.accepts(types);
       const mock = accept && notFoundMocks.find(mock => mock.ext === accept);

@@ -204,7 +204,7 @@ describe('smoke server', () => {
         .get('/not-found')
         .set('Accept', 'image/png')
         .expect(404)
-        .expect('Content-Type', /text/);
+        .expect('Content-Type', /plain/);
     });
   });
 
@@ -311,6 +311,24 @@ describe('smoke server', () => {
         },
         expect.anything()
       );
+    });
+  });
+
+  describe('should ignore files', () => {
+    it('should ignore mock', async () => {
+      app = createServer({...options, ignore: '*version*'});
+      await request(app)
+        .get('/api/version')
+        .expect(404);
+    });
+
+    it('should ignore 404', async () => {
+      app = createServer({...options, ignore: '404.html'});
+      await request(app)
+        .get('/not-found')
+        .set('Accept', 'text/html')
+        .expect(404)
+        .expect('Content-Type', /plain/);
     });
   });
 });
