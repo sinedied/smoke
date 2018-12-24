@@ -1,14 +1,16 @@
 const path = require('path');
 const request = require('supertest');
 
-const {createServer} = require('../smoke');
-
 const options = {basePath: path.join(__dirname, '/mocks')};
+
+jest.mock('express-http-proxy');
 
 describe('smoke server', () => {
   let app;
+  let createServer;
 
   beforeEach(() => {
+    createServer = require('../smoke').createServer;
     app = createServer(options);
   });
 
@@ -203,6 +205,91 @@ describe('smoke server', () => {
         .set('Accept', 'image/png')
         .expect(404)
         .expect('Content-Type', /text/);
+    });
+  });
+
+  describe('should record mock', () => {
+    let fs;
+    let mockProxy;
+
+    beforeEach(() => {
+      // Setup mocks
+      mockProxy = require('express-http-proxy');
+      mockProxy.mockImplementation((_host, options) => async (req, res) => {
+        await options.userResDecorator(
+          {
+            statusCode: 200,
+            headers: {'Content-Type': 'text/plain'}
+          },
+          Buffer.from('hello'),
+          req
+        );
+        res.status(200).send('hello');
+      });
+
+      fs = require('fs-extra');
+      fs.mkdirp = jest.fn();
+      fs.writeFile = jest.fn();
+      fs.writeJSON = jest.fn();
+    });
+
+    it('should not proxy request if a mock exists', async () => {
+      app = createServer({...options, record: 'http://proxy.to'});
+      await request(app)
+        .get('/api/version')
+        .expect(200);
+
+      expect(mockProxy).not.toHaveBeenCalled();
+    });
+
+    it('should proxy request and save mock', async () => {
+      app = createServer({...options, record: 'http://proxy.to'});
+      const response = await request(app)
+        .get('/api/hello-new')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new.txt'),
+        Buffer.from('hello')
+      );
+    });
+
+    it('should proxy request and save mock with current set', async () => {
+      app = createServer({...options, record: 'http://proxy.to', set: 'test'});
+      const response = await request(app)
+        .get('/api/hello-new')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new.test.txt'),
+        Buffer.from('hello')
+      );
+    });
+
+    it('should proxy request and save mock with headers', async () => {
+      app = createServer({...options, record: 'http://proxy.to', saveHeaders: true});
+      const response = await request(app)
+        .get('/api/hello-new')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeJSON).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new.json'),
+        {
+          statusCode: 200,
+          body: 'hello',
+          headers: {'Content-Type': 'text/plain'}
+        },
+        {spaces: 2}
+      );
     });
   });
 });
