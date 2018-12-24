@@ -212,26 +212,27 @@ describe('smoke server', () => {
     let fs;
     let mockProxy;
 
-    beforeEach(() => {
-      // Setup mocks
+    function setupMocks(statusCode = 200) {
       mockProxy = require('express-http-proxy');
       mockProxy.mockImplementation((_host, options) => async (req, res) => {
         await options.userResDecorator(
           {
-            statusCode: 200,
+            statusCode,
             headers: {'Content-Type': 'text/plain'}
           },
           Buffer.from('hello'),
           req
         );
-        res.status(200).send('hello');
+        res.status(statusCode).send('hello');
       });
 
       fs = require('fs-extra');
       fs.mkdirp = jest.fn();
       fs.writeFile = jest.fn();
       fs.writeJSON = jest.fn();
-    });
+    }
+
+    beforeEach(() => setupMocks());
 
     it('should not proxy request if a mock exists', async () => {
       app = createServer({...options, record: 'http://proxy.to'});
@@ -288,7 +289,27 @@ describe('smoke server', () => {
           body: 'hello',
           headers: {'Content-Type': 'text/plain'}
         },
-        {spaces: 2}
+        expect.anything()
+      );
+    });
+
+    it('should proxy request and save custom mock', async () => {
+      setupMocks(401);
+      app = createServer({...options, record: 'http://proxy.to'});
+      const response = await request(app)
+        .get('/api/hello-new')
+        .expect(401);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeJSON).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new.json'),
+        {
+          statusCode: 401,
+          body: 'hello'
+        },
+        expect.anything()
       );
     });
   });
