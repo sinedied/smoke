@@ -54,6 +54,7 @@ Base options:
   -h, --host <host>       Server host           [default: "localhost"]
   -s, --set <name>        Mocks set to use      [default: none]
   -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
+  -g, --ignore <glob>     Files to ignore       [default: none]
   -l, --logs              Enable server logs
   -v, --version           Show version
   --help                  Show help
@@ -61,6 +62,7 @@ Base options:
 Mock recording:
   -r, --record <host>     Proxy & record requests if no mock found
   -d, --depth <N>         Folder depth for mocks  [default: 1]
+  -a, --save-headers      Save response headers
 ```
 
 ### File naming
@@ -238,6 +240,9 @@ record the resulting response as a mock file.
 You can change the maximum folder depth for mock files created this way using the `--depth` option.
 
 The recorded mock set can also be changed using the `--set` option.
+
+Note that by default response headers are not saved and simple mocks are generated. To change this behavior, you can
+enable the `--save-headers` option.
 
 ## Other mock servers
 
