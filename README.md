@@ -12,7 +12,7 @@
 
 Just drop a bunch of (JSON) files in a folder and you're ready to go!
 
-#### Basic mock example:
+### Basic mock example
 1. Start the server: `smoke`
 2. Create a file named `get_api#hello.json`:
     ```json
@@ -22,7 +22,7 @@ Just drop a bunch of (JSON) files in a folder and you're ready to go!
     ```
 3. Test the mock: `curl http://localhost:3000/api/hello`
 
-#### Features
+### Features
 
 **Smoke** is a file-based, convention over configuration mock server that can fill your API mocking needs without any
 complex setup. Yet, it supports many advanced features and dynamic mocks for almost any situation:
