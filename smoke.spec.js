@@ -1,7 +1,7 @@
 const path = require('path');
 const request = require('supertest');
 
-const options = {basePath: path.join(__dirname, '/mocks')};
+const options = {basePath: path.join(__dirname, '/test/mocks')};
 
 jest.mock('express-http-proxy');
 
@@ -10,7 +10,7 @@ describe('smoke server', () => {
   let createServer;
 
   beforeEach(() => {
-    createServer = require('../smoke').createServer;
+    createServer = require('./smoke').createServer;
     app = createServer(options);
   });
 
@@ -322,6 +322,13 @@ describe('smoke server', () => {
         .expect(404);
     });
 
+    it('should ignore mock with absolute path', async () => {
+      app = createServer({...options, ignore: path.join(options.basePath, '*version*')});
+      await request(app)
+        .get('/api/version')
+        .expect(404);
+    });
+
     it('should ignore 404', async () => {
       app = createServer({...options, ignore: '404.html'});
       await request(app)
@@ -329,6 +336,47 @@ describe('smoke server', () => {
         .set('Accept', 'text/html')
         .expect(404)
         .expect('Content-Type', /plain/);
+    });
+  });
+
+  describe('should use middleware hooks', () => {
+    beforeEach(() => jest.resetModules());
+
+    it('should add header via before hook', async () => {
+      app = createServer({...options, hooks: path.join(__dirname, 'test/hooks.js')});
+      await request(app)
+        .get('/api/hello')
+        .expect(200)
+        .expect('Hocus', 'pocus');
+    });
+
+    it('should fail after 1 request via before hook', async () => {
+      app = createServer({...options, hooks: path.join(__dirname, 'test/hooks.js')});
+      await request(app)
+        .get('/api/hello')
+        .expect(200);
+
+      await request(app)
+        .get('/api/hello')
+        .expect(500);
+    });
+
+    it('should change response body via after hook', async () => {
+      app = createServer({...options, hooks: path.join(__dirname, 'test/hooks.js')});
+      const response = await request(app)
+        .get('/api/hello')
+        .expect(200);
+
+      expect(response.body).toEqual({text: 'hooked!'});
+    });
+
+    it('should ignore hooks file when searching for mocks', async () => {
+      app = createServer({basePath: path.join(__dirname, '/test'), hooks: path.join(__dirname, 'test/hooks.js')});
+      await request(app)
+        .get('/hooks')
+        .expect(404);
+
+      console.log('ds');
     });
   });
 });
