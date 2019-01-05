@@ -27,13 +27,14 @@ Just drop a bunch of (JSON) files in a folder and you're ready to go!
 **Smoke** is a file-based, convention over configuration mock server that can fill your API mocking needs without any
 complex setup. Yet, it supports many advanced features and dynamic mocks for almost any situation:
 
+- Generate mocks quickly by recording responses from an existing server
 - Use folders and file names to describe API routes and REST methods
 - Use templates to generate responses based on input queries and route parameters
 - Add / edit / remove mocks without restarting the server
 - Generate mocks with JavaScript for more complex responses
 - Define different mock sets to simulate various scenarii (errors...), with fallback
 - Customize headers and status code if needed, automatically detect content-type if not specified
-- Generate mocks quickly by recording from an existing server
+- Add custom middlewares to modify requests/responses
 
 ## Installation
 
@@ -243,6 +244,32 @@ The recorded mock set can also be changed using the `--set` option.
 
 Note that by default response headers are not saved and simple mocks are generated. To change this behavior, you can
 enable the `--save-headers` option.
+
+### Middleware hooks
+
+For more advanced usages, you can hook on any standard
+[Express middleware](https://expressjs.com/en/guide/writing-middleware.html) to modify the request and/or the response
+returned by the server.
+
+To hook on your own middlewares, use the `--hooks` to specify a JavaScript module with exports setup like this:
+```js
+module.exports = {
+  before: [], // middlewares to be executed before the request is processed
+  after: []   // middlewares to be executed after the request has been processed
+};
+```
+
+Middlewares executed before the request is processed can be used to bypass regular mock response, for example to
+randomly simulate a server failure with an early error 500 response.
+
+On the other hand, middlewares executed after the request have been processed can be used to augment or modify the
+response, for example by adding header or changing the response status. You can also access and modify the response
+body by using the special `res.body` property.
+
+Remember that once you have used `.send()`, `.sendStatus` or `.json()` in a middleware the response cannot be altered
+anymore, that's why you should use the `res.body` property instead if you plan to alter the response later on.
+
+See some [example hooks](test/hooks.js).
 
 ## Other mock servers
 
