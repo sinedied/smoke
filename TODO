@@ -1,2 +1,1 @@
 - single file mocks support (.mocks.js?)
-- express middleware support + pre response hook
