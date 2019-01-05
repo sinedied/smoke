@@ -10,6 +10,7 @@ Base options:
   -s, --set <name>        Mocks set to use      [default: none]
   -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
   -g, --ignore <glob>     Files to ignore       [default: none]
+  -k, --hooks <file>      Middleware hooks      [default: none]
   -l, --logs              Enable server logs
   -v, --version           Show version
   --help                  Show help
@@ -23,7 +24,7 @@ Mock recording:
 function run(args) {
   const options = minimist(args, {
     number: ['port', 'depth'],
-    string: ['host', 'set', 'not-found', 'record', 'ignore'],
+    string: ['host', 'set', 'not-found', 'record', 'ignore', 'hooks'],
     boolean: ['help', 'version', 'logs'],
     alias: {
       p: 'port',
@@ -34,7 +35,8 @@ function run(args) {
       r: 'record',
       d: 'depth',
       a: 'save-headers',
-      g: 'ignore'
+      g: 'ignore',
+      k: 'hooks'
     }
   });
   const app = createServer({
@@ -44,6 +46,7 @@ function run(args) {
     set: options.set,
     notFound: options['not-found'],
     ignore: options.ignore,
+    hooks: options.hooks,
     logs: options.logs,
     record: options.record,
     depth: options.depth,
@@ -53,11 +56,15 @@ function run(args) {
   if (options.help) {
     return console.log(help);
   }
+
   if (options.version) {
     const pkg = require('./package.json');
     return console.log(pkg.version);
   }
-  startServer(app);
+
+  if (app) {
+    startServer(app);
+  }
 }
 
 module.exports = run;
