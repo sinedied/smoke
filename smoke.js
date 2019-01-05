@@ -16,7 +16,7 @@ function createServer(options) {
     host: options.host || 'localhost',
     set: options.set || null,
     notFound: options.notFound || '404.*',
-    ignore: options.ignore ? ['!' + options.ignore] : [],
+    ignore: options.ignore ? [options.ignore] : [],
     hooks: options.hooks || null,
     logs: options.logs || false,
     record: options.record || null,
@@ -41,7 +41,8 @@ function createServer(options) {
 
   if (options.hooks) {
     try {
-      hooks = require(path.join(process.cwd(), options.hooks)) || {};
+      const hooksFile = path.isAbsolute(options.hooks) ? options.hooks : path.join(process.cwd(), options.hooks);
+      hooks = require(hooksFile) || {};
       hooks.before = Array.isArray(hooks.before) ? hooks.before : [];
       hooks.after = Array.isArray(hooks.after) ? hooks.after : [];
     } catch (error) {
@@ -50,7 +51,7 @@ function createServer(options) {
     }
   }
 
-  return app.all('*', hooks.before, asyncMiddleware(processRequest), hooks.after, sendResponse);
+  return app.all('*', hooks.before, asyncMiddleware(processRequest(options)), hooks.after, sendResponse);
 }
 
 function startServer(app) {
@@ -67,8 +68,8 @@ function processRequest(options) {
     const reqPath = req.path.substring(1);
     const method = req.method.toLowerCase();
     const data = {method, query, params: {}, headers, body, files};
-    const ignore = options.ignore.concat(options.hooks ? ['!' + options.hooks] : []);
-    const mocks = await getMocks(options.basePath, ['**/*', `!${options.notFound}`, ...ignore]);
+    const ignore = options.ignore.concat(options.hooks ? [options.hooks] : []);
+    const mocks = await getMocks(options.basePath, [options.notFound, ...ignore]);
     const matches = mocks.reduce((allMatches, mock) => {
       const match = reqPath.match(mock.regexp);
 
@@ -97,7 +98,7 @@ function processRequest(options) {
       }
 
       // Search for 404 mocks, matching accept header
-      const notFoundMocks = await getMocks(options.basePath, [options.notFound, ...ignore]);
+      const notFoundMocks = await getMocks(options.basePath, ignore, options.notFound);
       const types = notFoundMocks.length > 0 ? notFoundMocks.map(mock => mock.type) : null;
       const accept = types && req.accepts(types);
       const mock = accept && notFoundMocks.find(mock => mock.ext === accept);
@@ -105,7 +106,7 @@ function processRequest(options) {
       if (mock) {
         await respondMock(res, mock, data, 404);
       } else {
-        res.status(404);
+        res.status(404).type('txt');
         res.body = 'Not Found';
       }
     } else {
