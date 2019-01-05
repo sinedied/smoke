@@ -375,8 +375,6 @@ describe('smoke server', () => {
       await request(app)
         .get('/hooks')
         .expect(404);
-
-      console.log('ds');
     });
   });
 });
