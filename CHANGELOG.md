@@ -1,3 +1,6 @@
+# 1.3.0
+- Add fallback proxy option
+
 # 1.2.0
 - Add support for middleware hooks
 
