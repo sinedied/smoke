@@ -18,8 +18,9 @@ function createServer(options) {
     notFound: options.notFound || '404.*',
     ignore: options.ignore ? [options.ignore] : [],
     hooks: options.hooks || null,
+    proxy: options.record || options.proxy || null,
     logs: options.logs || false,
-    record: options.record || null,
+    record: Boolean(options.record),
     depth: typeof options.depth === 'number' ? options.depth : 1,
     saveHeaders: options.saveHeaders || false
   };
@@ -86,12 +87,14 @@ function processRequest(options) {
     }, []);
 
     if (matches.length === 0) {
-      if (options.record) {
-        console.info(`No mock found for ${req.path}, proxying request to ${options.record}`);
-        return proxy(options.record, {
+      if (options.proxy) {
+        console.info(`No mock found for ${req.path}, proxying request to ${options.proxy}`);
+        return proxy(options.proxy, {
           limit: '10mb',
           userResDecorator: async (proxyRes, proxyResData, userReq) => {
-            await record(userReq, proxyRes, proxyResData, options);
+            if (options.record) {
+              await record(userReq, proxyRes, proxyResData, options);
+            }
             return proxyResData;
           }
         })(req, res, next);

@@ -35,6 +35,7 @@ complex setup. Yet, it supports many advanced features and dynamic mocks for alm
 - Define different mock sets to simulate various scenarii (errors...), with fallback
 - Customize headers and status code if needed, automatically detect content-type if not specified
 - Add custom middlewares to modify requests/responses
+- Mock only specific requests and proxy the rest to an existing server
 
 ## Installation
 
@@ -56,6 +57,8 @@ Base options:
   -s, --set <name>        Mocks set to use      [default: none]
   -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
   -g, --ignore <glob>     Files to ignore       [default: none]
+  -k, --hooks <file>      Middleware hooks      [default: none]
+  -x, --proxy <host>      Fallback proxy if no mock found
   -l, --logs              Enable server logs
   -v, --version           Show version
   --help                  Show help
@@ -231,6 +234,13 @@ module.exports = data => ({
   body: `Your user agent is: ${data.headers['user-agent']}`
 });
 ```
+
+### Fallback proxy
+
+If you want to override responses of an existing server, you can use the `--proxy <host>` option. This will proxy
+every request for which a mock does not exist to the specified host.
+
+This can also be useful for mocking yet-to-be-implemented APIs and keep using real implemented APIs.
 
 ### Mock recording
 

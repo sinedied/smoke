@@ -11,6 +11,7 @@ Base options:
   -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
   -g, --ignore <glob>     Files to ignore       [default: none]
   -k, --hooks <file>      Middleware hooks      [default: none]
+  -x, --proxy <host>      Fallback proxy if no mock found
   -l, --logs              Enable server logs
   -v, --version           Show version
   --help                  Show help
@@ -24,7 +25,7 @@ Mock recording:
 function run(args) {
   const options = minimist(args, {
     number: ['port', 'depth'],
-    string: ['host', 'set', 'not-found', 'record', 'ignore', 'hooks'],
+    string: ['host', 'set', 'not-found', 'record', 'ignore', 'hooks', 'proxy'],
     boolean: ['help', 'version', 'logs'],
     alias: {
       p: 'port',
@@ -36,7 +37,8 @@ function run(args) {
       d: 'depth',
       a: 'save-headers',
       g: 'ignore',
-      k: 'hooks'
+      k: 'hooks',
+      x: 'proxy'
     }
   });
   const app = createServer({
@@ -47,6 +49,7 @@ function run(args) {
     notFound: options['not-found'],
     ignore: options.ignore,
     hooks: options.hooks,
+    proxy: options.proxy,
     logs: options.logs,
     record: options.record,
     depth: options.depth,
