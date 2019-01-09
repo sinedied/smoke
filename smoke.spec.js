@@ -258,6 +258,36 @@ describe('smoke server', () => {
       );
     });
 
+    it('should proxy request and save with min depth', async () => {
+      app = createServer({...options, record: 'http://proxy.to', depth: 0});
+      const response = await request(app)
+        .get('/api/hello-new')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(options.basePath);
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'get_api#hello-new.txt'),
+        Buffer.from('hello')
+      );
+    });
+
+    it('should proxy request and save with max depth', async () => {
+      app = createServer({...options, record: 'http://proxy.to', depth: 50});
+      const response = await request(app)
+        .get('/api/hello-new')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api/hello-new'));
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/hello-new/get_.txt'),
+        Buffer.from('hello')
+      );
+    });
+
     it('should proxy request and save mock with current set', async () => {
       app = createServer({...options, record: 'http://proxy.to', set: 'test'});
       const response = await request(app)
