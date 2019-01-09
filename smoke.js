@@ -9,21 +9,7 @@ const {respondMock} = require('./lib/response');
 const {record} = require('./lib/recorder');
 
 function createServer(options) {
-  options = options || {};
-  options = {
-    basePath: options.basePath || '',
-    port: options.port || 3000,
-    host: options.host || 'localhost',
-    set: options.set || null,
-    notFound: options.notFound || '404.*',
-    ignore: options.ignore ? [options.ignore] : [],
-    hooks: options.hooks || null,
-    proxy: options.record || options.proxy || null,
-    logs: options.logs || false,
-    record: Boolean(options.record),
-    depth: typeof options.depth === 'number' ? options.depth : 1,
-    saveHeaders: options.saveHeaders || false
-  };
+  options = getOptions(options);
 
   const app = express()
     .disable('x-powered-by')
@@ -63,6 +49,32 @@ function startServer(app) {
   });
 }
 
+function getOptions(options) {
+  options = options || {};
+  return {
+    basePath: options.basePath || '',
+    port: options.port || 3000,
+    host: options.host || 'localhost',
+    set: options.set || null,
+    notFound: options.notFound || '404.*',
+    ignore: options.ignore ? [options.ignore] : [],
+    hooks: options.hooks || null,
+    proxy: options.record || options.proxy || null,
+    logs: options.logs || false,
+    record: Boolean(options.record),
+    depth: typeof options.depth === 'number' ? options.depth : 1,
+    saveHeaders: options.saveHeaders || false
+  };
+}
+
+function matchMock(mock, method, set, query) {
+  return (
+    (!mock.methods || mock.methods.includes(method)) &&
+    (!mock.set || mock.set === set) &&
+    (!mock.params || Object.entries(mock.params).every(([k, v]) => query[k] === v))
+  );
+}
+
 function processRequest(options) {
   return async (req, res, next) => {
     const {query, headers, body, files} = req;
@@ -77,8 +89,8 @@ function processRequest(options) {
       if (match) {
         const accept = req.accepts(mock.type);
 
-        if (accept && (!mock.methods || mock.methods.includes(method)) && (!mock.set || mock.set === options.set)) {
-          const score = (mock.methods ? 1 : 0) + (mock.set ? 2 : 0);
+        if (accept && matchMock(mock, method, options.set, query)) {
+          const score = (mock.methods ? 1 : 0) + (mock.set ? 2 : 0) + (mock.params ? 4 : 0);
           allMatches.push({match, mock, score});
         }
       }

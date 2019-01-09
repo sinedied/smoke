@@ -146,6 +146,33 @@ describe('smoke server', () => {
     });
   });
 
+  describe('should discriminate with query params', () => {
+    it('should use mock matching query param', async () => {
+      const response = await request(app)
+        .get('/api/hello?who=john%20doe')
+        .expect(200);
+
+      expect(response.body.hello).toBe('john');
+    });
+
+    it('should use mock matching one query param among many', async () => {
+      const response = await request(app)
+        .get('/api/hello?some=value&who=john%20doe')
+        .expect(200);
+
+      expect(response.body.hello).toBe('john');
+    });
+
+    it('should use mock matching query param over matching set', async () => {
+      app = createServer({...options, set: 'other'});
+      const response = await request(app)
+        .get('/api/hello?who=john%20doe')
+        .expect(200);
+
+      expect(response.body.hello).toBe('john');
+    });
+  });
+
   describe('should get data from request', () => {
     it('should get JSON data from post', async () => {
       const response = await request(app)

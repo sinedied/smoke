@@ -18,6 +18,11 @@ POST http://localhost:3000/api/hello
 
 ###
 
+// Test query params discrimination
+http://localhost:3000/api/hello?who=john%20doe
+
+###
+
 // Test post
 POST http://localhost:3000/api/ping
 Content-Type: application/json
