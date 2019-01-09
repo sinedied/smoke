@@ -47,7 +47,7 @@ npm install -g smoke
 
 See [some example mocks](test/mocks) to quickly get a grasp of the syntax and possibilities.
 
-CLI usage is quite straightforward:
+CLI usage is quite straightforward you can just run `smoke` unless you want to add some options:
 ```
 Usage: smoke [<mocks_folder>] [options]
 
