@@ -1,3 +1,6 @@
+# 1.4.0
+- Add support for query params matching
+
 # 1.3.0
 - Add fallback proxy option
 
