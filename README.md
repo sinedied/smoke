@@ -71,7 +71,7 @@ Mock recording:
 
 ### File naming
 
-**General format:** `methods_api#route#:param.set.extension`
+**General format:** `methods_api#route#:routeParam$queryParam=value=.set.extension`
 
 The path and file name of the mock is used to determinate:
 
@@ -89,6 +89,21 @@ For example `api/example/get_hello.json` is equivalent to `get_api#example#hello
 Additionaly, any route component can be defined as a route parameter by prefixing the name with `:`, for example
 `api#resource#:id.json` will match `GET api/resource/1` and expose `1` as the value for the `id` parameter that can be
 used in dynamic mocks (templates or JavaScript).
+
+#### Query parameters
+You can further discriminate mocks by adding query parameters to match after defining the route, using a `$` (instead
+of the regular `?`) like you would specify them in a request.
+
+For example `get_api#hello?who=john.json` will match the request `api/get_hello?who=john.json`.
+
+Multiple query parameters to match can be added with `&`, for example `get_api#hello?who=john&greet=hi.json`.
+Any specified query parameter in the file name must be matched (in any order) by the request, but the opposite is not
+needed.
+
+Note that special characters must be URL-encoded, for example use `get_api#hello?who=john%20doe.json` to set the
+parameter `who` with the value `john doe`.
+
+> Tip: If you need to URL-encode a string, just run `node -p "encodeURIComponent('some string')"` in a terminal.
 
 #### Content type
 The file extension will determine the content type of the response if it's not already specified in a
