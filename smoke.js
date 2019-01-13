@@ -90,7 +90,8 @@ function processRequest(options) {
         const accept = req.accepts(mock.type);
 
         if (accept && matchMock(mock, method, options.set, query)) {
-          const score = (mock.methods ? 1 : 0) + (mock.set ? 2 : 0) + (mock.params ? 4 : 0);
+          const score =
+            (mock.methods ? 1 : 0) + (mock.set ? 2 : 0) + (mock.params ? 4 : 0) + (mock.data === undefined ? 0.5 : 0);
           allMatches.push({match, mock, score});
         }
       }
