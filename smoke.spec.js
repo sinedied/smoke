@@ -65,7 +65,8 @@ describe('smoke server', () => {
     it('should render JS', async () => {
       await request(app)
         .get('/api/random')
-        .expect(200);
+        .expect(200)
+        .expect('Content-Type', /json/);
     });
 
     it('should not cache JS mocks', async () => {
@@ -492,6 +493,99 @@ describe('smoke server', () => {
       await request(app)
         .get('/hooks')
         .expect(404);
+    });
+  });
+
+  describe('should handle mock collections', () => {
+    it('should match simple mock', async () => {
+      const response = await request(app)
+        .get('/api/ping')
+        .expect(200)
+        .expect('Content-Type', /text/);
+
+      expect(response.text).toEqual('pong!');
+    });
+
+    it('should match content type', async () => {
+      const response = await request(app)
+        .get('/api/ping')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/);
+
+      expect(response.body.message).toEqual('pong!');
+    });
+
+    it('should allow JS mock', async () => {
+      const response = await request(app)
+        .post('/api/ping')
+        .send({who: 'me'})
+        .expect(200)
+        .expect('Content-Type', /json/);
+
+      expect(response.body.message).toEqual('pong me');
+    });
+
+    it('should allow template mock', async () => {
+      const response = await request(app)
+        .put('/api/ping?who=you')
+        .expect(200)
+        .expect('Content-Type', /text/);
+
+      expect(response.text).toEqual('pong template you');
+    });
+
+    it('should support mock with no content', async () => {
+      const response = await request(app)
+        .delete('/api/ping')
+        .expect(204);
+
+      expect(response.text).toBe('');
+    });
+
+    it('should support mock set', async () => {
+      app = createServer({...options, set: '503'});
+      const response = await request(app)
+        .get('/api/ping')
+        .expect(503);
+
+      expect(response.body.message).toEqual('Not available');
+    });
+
+    it('should discriminate mock with query param', async () => {
+      const response = await request(app)
+        .get('/api/ping?who=john')
+        .expect(200)
+        .expect('Content-Type', /text/);
+
+      expect(response.text).toEqual('pong john!');
+    });
+
+    it('should support mock with buffer content', async () => {
+      const response = await request(app)
+        .get('/api/ping/me')
+        .expect(200)
+        .expect('Content-Type', /text/);
+
+      expect(response.text).toEqual('pong 64!');
+    });
+
+    it('should prioritize file mock over mock in collection', async () => {
+      const response = await request(app)
+        .get('/api/hello')
+        .expect(200);
+
+      expect(response.text).not.toEqual('not used');
+    });
+
+    it('should support collection for 404 errors', async () => {
+      app = createServer({...options, notFound: '404.mocks.js'});
+      const response = await request(app)
+        .get('/api/not-found')
+        .expect(404)
+        .expect('Content-Type', /text/);
+
+      expect(response.text).toEqual('Duh! Nothing there...');
     });
   });
 });
