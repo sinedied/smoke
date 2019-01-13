@@ -140,15 +140,15 @@ describe('smoke server', () => {
 
     it('should support multiple methods', async () => {
       await request(app)
-        .post('/api/ping')
+        .post('/ping')
         .expect(200);
 
       await request(app)
-        .put('/api/ping')
+        .put('/ping')
         .expect(200);
 
       await request(app)
-        .get('/api/ping')
+        .get('/ping')
         .expect(404);
     });
   });
@@ -183,7 +183,7 @@ describe('smoke server', () => {
   describe('should get data from request', () => {
     it('should get JSON data from post', async () => {
       const response = await request(app)
-        .post('/api/ping')
+        .post('/ping')
         .send({message: 'test'})
         .expect(200);
 
@@ -192,7 +192,7 @@ describe('smoke server', () => {
 
     it('should get form data from post', async () => {
       const response = await request(app)
-        .post('/api/ping')
+        .post('/ping')
         .send('message=test')
         .expect(200);
 

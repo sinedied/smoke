@@ -24,7 +24,7 @@ http://localhost:3000/api/hello?who=john%20doe
 ###
 
 // Test post
-POST http://localhost:3000/api/ping
+POST http://localhost:3000/ping
 Content-Type: application/json
 
 { "message": "test" }
@@ -32,7 +32,7 @@ Content-Type: application/json
 ###
 
 // Test post with different content-type
-POST http://localhost:3000/api/ping
+POST http://localhost:3000/ping
 Content-Type: application/x-www-form-urlencoded
 
 message=test
@@ -40,7 +40,7 @@ message=test
 ###
 
 // Test multiple methods support
-PUT http://localhost:3000/api/ping
+PUT http://localhost:3000/ping
 Content-Type: application/json
 
 { "message": "test" }
