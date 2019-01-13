@@ -26,6 +26,13 @@ describe('smoke server', () => {
         .get('/api/test/1')
         .expect(200);
     });
+
+    it('should ignore node_modules if no basePath is specified', async () => {
+      app = createServer();
+      await request(app)
+        .get('/node_modules/jest/package')
+        .expect(404);
+    });
   });
 
   describe('should allow templates', () => {

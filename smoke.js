@@ -113,7 +113,7 @@ function processRequest(options) {
       }
 
       // Search for 404 mocks, matching accept header
-      const notFoundMocks = await getMocks(options.basePath, ignore, options.notFound);
+      const notFoundMocks = await getMocks(options.basePath, ignore, [options.notFound]);
       const types = notFoundMocks.length > 0 ? notFoundMocks.map(mock => mock.type) : null;
       const accept = types && req.accepts(types);
       const mock = accept && notFoundMocks.find(mock => mock.ext === accept);
