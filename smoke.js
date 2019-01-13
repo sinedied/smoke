@@ -125,8 +125,9 @@ function processRequest(options) {
         res.body = 'Not Found';
       }
     } else {
-      const accept = req.accepts(matches.map(match => match.mock.type));
-      const {match, mock} = matches.filter(match => accept === match.mock.type).sort((a, b) => b.score - a.score)[0];
+      const sortedMatches = matches.sort((a, b) => b.score - a.score);
+      const accept = req.accepts(sortedMatches.map(match => match.mock.type));
+      const {match, mock} = sortedMatches.filter(match => accept === match.mock.type)[0];
 
       // Fill in route params
       mock.keys.forEach((key, index) => {
