@@ -55,6 +55,14 @@
       "test/mocks/**/*"
     ]
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "*.js",
+      "lib/**/*.js"
+    ],
+    "silent": true,
+    "verbose": true
+  },
   "engines": {
     "node": ">=8.0.0"
   }
