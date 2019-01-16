@@ -108,6 +108,7 @@ function processRequest(options) {
             if (options.record) {
               await record(userReq, proxyRes, proxyResData, options);
             }
+
             return proxyResData;
           }
         })(req, res, next);
@@ -137,6 +138,7 @@ function processRequest(options) {
 
       await respondMock(res, mock, data);
     }
+
     next();
   };
 }
