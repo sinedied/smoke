@@ -71,7 +71,7 @@ Mock recording:
 
 ### File naming
 
-**General format:** `methods_api#route#:routeParam$queryParam=value=.set.extension`
+**General format:** `methods_api#route#:routeParam$queryParam=value.set.extension`
 
 The path and file name of the mock is used to determinate:
 
@@ -295,6 +295,38 @@ Remember that once you have used `.send()`, `.sendStatus` or `.json()` in a midd
 anymore, that's why you should use the `res.body` property instead if you plan to alter the response later on.
 
 See some [example hooks](test/hooks.js).
+
+### Single file mock collection
+
+You can regroup multiple mocks in a special single file with the extension `.mocks.js`, using this format:
+```js
+module.exports = {
+  '<file_name>': '<file_content>' // can be a string, an object (custom response) or a function (JavaScript mock)
+};
+```
+See this [example mock collection](test/mocks/collection.mocks.js) to get an idea of all possibilities.
+
+The format of file name is the same as for individual mock files, and will be used to match the request using the same
+rules. As for the mock content, the format is also the same as what you would put in single file mock. If a request
+matches both a mock file and a mock within a collection with the same specificity, the mock file will always be used
+over the collection.
+
+As the format is the same, you can convert a bunch of files to a single file mock collection and conversely.
+To convert separate mock files to a collection:
+```sh
+smoke-conv <glob> <output_file>  // Will create <output_file>.mocks.js from all mocks found
+```
+
+To convert a mock collection to separate files:
+```sh
+smoke-conv <file> <output_folder>  // Will extract separate mocks into <output_folder>
+```
+
+Note that only text-based file content will be inserted directly, other file content will be converted to a base64
+string.
+
+:warning: There is a limitation regarding JavaScript mocks: only the exported function will be converted for a given
+mock, meaning that if you have non-exported functions, variables or imports they will be lost during the conversion.
 
 ## Other mock servers
 
