@@ -4,7 +4,8 @@
   "description": "Simple yet powerful file-based mock server with recording abilities",
   "main": "smoke.js",
   "bin": {
-    "smoke": "./bin/smoke"
+    "smoke": "./bin/smoke",
+    "smoke-conv": "./bin/smoke-conv"
   },
   "scripts": {
     "lint": "xo",
