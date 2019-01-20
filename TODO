@@ -1,1 +1,6 @@
-- single file mocks support (.mocks.js?)
+- Mock collection recording (`--collection <file>`)
+- Save query params when recording + option to ignore
+- Appveyor CI
+- Fix accept matches with JS mocks (preload before matching final accept filter)
+- CLI unit tests
+- Test/improve performance

@@ -1,3 +1,10 @@
+# 2.0.0
+- Add support for single file mock collections
+- Add mock collection conversion utility
+
+## Breaking changes
+- Change mock set prefix to `__`
+
 # 1.4.0
 - Add support for query params matching
 
