@@ -386,7 +386,7 @@ describe('smoke server', () => {
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
       expect(fs.writeFile).toHaveBeenCalledWith(
-        path.join(options.basePath, 'api/get_hello-new.test.txt'),
+        path.join(options.basePath, 'api/get_hello-new__test.txt'),
         Buffer.from('hello')
       );
     });

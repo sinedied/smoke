@@ -16,7 +16,7 @@ module.exports = {
   'delete_api#ping': null,
 
   // Define mock set with custom response
-  'get_api#ping.503.json': {
+  'get_api#ping__503.json': {
     statusCode: 503,
     body: {message: 'Not available'}
   },

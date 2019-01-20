@@ -71,7 +71,7 @@ Mock recording:
 
 ### File naming
 
-**General format:** `methods_api#route#:routeParam$queryParam=value.set.extension`
+**General format:** `methods_api#route#:routeParam$queryParam=value.__et.extension`
 
 The path and file name of the mock is used to determinate:
 
@@ -116,9 +116,9 @@ mock depending of the [`Accept` header](https://developer.mozilla.org/en-US/docs
 request.
 
 #### Mock set
-You can optionally specify a mock set before the file extension by using a `.set-name` suffix after the file name.
+You can optionally specify a mock set before the file extension by using a `__set-name` suffix after the file name.
 
-For example `get_api#hello.error.json` will only be used if you start the server with the `error` set enabled:
+For example `get_api#hello__error.json` will only be used if you start the server with the `error` set enabled:
 `smoke --set error`.
 
 If you do not specify a mock set on your file name, it will be considered as the default mock for the specified route
