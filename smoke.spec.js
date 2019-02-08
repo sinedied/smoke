@@ -411,6 +411,51 @@ describe('smoke server', () => {
       );
     });
 
+    it('should proxy request and save mock with 1 query parameter', async () => {
+      app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
+      const response = await request(app)
+        .get('/api/hello-new?who=world')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new$who=world.txt'),
+        Buffer.from('hello')
+      );
+    });
+
+    it('should proxy request and save mock with 2 query parameters', async () => {
+      app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
+      const response = await request(app)
+        .get('/api/hello-new?who=world&say=[yay!]')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new$who=world&say=%5Byay!%5D.txt'),
+        Buffer.from('hello')
+      );
+    });
+
+    it('should proxy request and save mock with empty query parameter', async () => {
+      app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
+      const response = await request(app)
+        .get('/api/hello-new?who=')
+        .expect(200);
+
+      expect(response.text).toBe('hello');
+      expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new$who=.txt'),
+        Buffer.from('hello')
+      );
+    });
+
     it('should proxy request and save custom mock', async () => {
       setupMocks(401);
       app = createServer({...options, record: 'http://record.to'});

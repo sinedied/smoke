@@ -67,6 +67,7 @@ Mock recording:
   -r, --record <host>     Proxy & record requests if no mock found
   -d, --depth <N>         Folder depth for mocks  [default: 1]
   -a, --save-headers      Save response headers
+  -q, --save-query        Save query parameters
 ```
 
 ### File naming
@@ -267,8 +268,8 @@ You can change the maximum folder depth for mock files created this way using th
 
 The recorded mock set can also be changed using the `--set` option.
 
-Note that by default response headers are not saved and simple mocks are generated. To change this behavior, you can
-enable the `--save-headers` option.
+Note that by default response headers and request query parameters are not saved. To change this behavior, you can
+use the `--save-headers` and `--save-query` options.
 
 ### Middleware hooks
 

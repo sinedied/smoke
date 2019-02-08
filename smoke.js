@@ -63,7 +63,8 @@ function getOptions(options) {
     logs: options.logs || false,
     record: Boolean(options.record),
     depth: typeof options.depth === 'number' ? options.depth : 1,
-    saveHeaders: options.saveHeaders || false
+    saveHeaders: options.saveHeaders || false,
+    saveQueryParams: options.saveQueryParams || false
   };
 }
 
