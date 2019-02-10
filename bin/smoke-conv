@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../convert.js')(process.argv.slice(2));
+require('../smoke-conv-cli.js')(process.argv.slice(2));

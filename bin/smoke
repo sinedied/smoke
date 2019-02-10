@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../cli.js')(process.argv.slice(2));
+require('../smoke-cli.js')(process.argv.slice(2));

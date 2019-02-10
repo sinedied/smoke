@@ -1,6 +1,6 @@
 const minimist = require('minimist');
 
-const {createServer, startServer} = require('./smoke');
+const {createServer, startServer} = require('./lib/smoke');
 
 const help = `Usage: smoke [<mocks_folder>] [options]
 
@@ -9,7 +9,7 @@ Base options:
   -h, --host <host>       Server host           [default: "localhost"]
   -s, --set <name>        Mocks set to use      [default: none]
   -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
-  -g, --ignore <glob>     Files to ignore       [default: none]
+  -i, --ignore <glob>     Files to ignore       [default: none]
   -k, --hooks <file>      Middleware hooks      [default: none]
   -x, --proxy <host>      Fallback proxy if no mock found
   -l, --logs              Enable server logs
@@ -38,7 +38,7 @@ function run(args) {
       d: 'depth',
       a: 'save-headers',
       q: 'save-query',
-      g: 'ignore',
+      i: 'ignore',
       k: 'hooks',
       x: 'proxy'
     }
