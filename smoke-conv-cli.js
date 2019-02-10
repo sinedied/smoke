@@ -6,15 +6,15 @@ const help = `Usage: smoke-conv <input_mocks_or_collection> <output_file_or_fold
 
 Convert a single file mock collection to separate mock files and conversely.
 
-If the input is a single mock collection (.mocks.js), it will be converted to
-separate mock files in <output_folder>.
+If the input is a single file mock collection (.mocks.js), it will be converted
+to separate mock files in <output_folder>.
 
 If the input is a set of separate mock files, it will be converted to a single
 file mock collection named <output_file>.mocks.js
 
 Options:
-  -i, --ignore <glob>     Files to ignore                  [default: none]
-  -d, --depth <N>         Max folder depth (single mocks)  [default: 1]
+  -i, --ignore <glob>     Files to ignore         [default: none]
+  -d, --depth <N>         Folder depth for mocks  [default: 1]
   -v, --version           Show version
   --help                  Show help
 `;
