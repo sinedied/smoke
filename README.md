@@ -56,7 +56,7 @@ Base options:
   -h, --host <host>       Server host           [default: "localhost"]
   -s, --set <name>        Mocks set to use      [default: none]
   -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
-  -g, --ignore <glob>     Files to ignore       [default: none]
+  -i, --ignore <glob>     Files to ignore       [default: none]
   -k, --hooks <file>      Middleware hooks      [default: none]
   -x, --proxy <host>      Fallback proxy if no mock found
   -l, --logs              Enable server logs
@@ -228,7 +228,7 @@ Note that JSON files and templates must use `UTF-8` encoding.
 #### JavaScript mocks
 
 In addition, you can define dynamic mocks using JavaScript by using the `.js` extension, that will be loaded as a regular
-NodeJS module.
+Node.js module.
 
 In that case, your JS module is expected to export a function that take an input data object with the
 [same properties](#templates) as for templates and must returns the response body or an
@@ -331,7 +331,7 @@ mock, meaning that if you have non-exported functions, variables or imports they
 
 ## Other mock servers
 
-If you cannot find what you need here, you might want to check out one of these other NodeJS mock servers:
+If you cannot find what you need here, you might want to check out one of these other Node.js mock servers:
 
 - [JSON Server](https://github.com/typicode/json-server)
 - [mockserver](https://github.com/namshi/mockserver)
