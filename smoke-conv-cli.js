@@ -13,16 +13,22 @@ If the input is a set of separate mock files, it will be converted to a single
 file mock collection named <output_file>.mocks.js
 
 Options:
-  -i, --ignore <glob>     Files to ignore       [default: none]
+  -i, --ignore <glob>     Files to ignore                  [default: none]
+  -d, --depth <N>         Max folder depth (single mocks)  [default: 1]
   -v, --version           Show version
   --help                  Show help
 `;
 
 async function run(args) {
   const options = minimist(args, {
+    number: ['depth'],
     string: ['ignore'],
     boolean: ['help', 'version'],
-    alias: {v: 'version', i: 'ignore'}
+    alias: {
+      v: 'version',
+      i: 'ignore',
+      d: 'depth'
+    }
   });
 
   if (options.help || options._.length !== 2) {
@@ -34,11 +40,7 @@ async function run(args) {
     return console.log(pkg.version);
   }
 
-  try {
-    await convert(options._[0], options._[1], options.ignore);
-  } catch (error) {
-    console.error(`Error during conversion`, error);
-  }
+  await convert(options._[0], options._[1], options.ignore, options.depth);
 }
 
 module.exports = run;
