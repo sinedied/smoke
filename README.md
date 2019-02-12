@@ -65,6 +65,7 @@ Base options:
 
 Mock recording:
   -r, --record <host>     Proxy & record requests if no mock found
+  -c, --collection <file> Save to single file mock collection
   -d, --depth <N>         Folder depth for mocks  [default: 1]
   -a, --save-headers      Save response headers
   -q, --save-query        Save query parameters
@@ -267,6 +268,9 @@ record the resulting response as a mock file.
 You can change the maximum folder depth for mock files created this way using the `--depth` option.
 
 The recorded mock set can also be changed using the `--set` option.
+
+Instead of recoring separate mock files, you can also record to a
+[single file mock collection](#single-file-mock-collection) using the `--collection <file>` option. 
 
 Note that by default response headers and request query parameters are not saved. To change this behavior, you can
 use the `--save-headers` and `--save-query` options.
