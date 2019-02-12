@@ -10,7 +10,7 @@ describe('smoke server', () => {
   let createServer;
 
   beforeEach(() => {
-    createServer = (...args) => require('./smoke').createServer(...args);
+    createServer = (...args) => require('../lib/smoke').createServer(...args);
     app = createServer(options);
   });
 
@@ -506,7 +506,7 @@ describe('smoke server', () => {
     it('should proxy request and save to existing mock collection', async () => {
       jest.resetModules();
       setupMocks();
-      const mock = require('./mock');
+      const mock = require('../lib/mock');
       mock.getMocksFromCollections = jest.fn().mockReturnValueOnce(
         Promise.resolve([
           {

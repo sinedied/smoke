@@ -1,6 +1,6 @@
 const path = require('path');
 
-const {convert} = require('./convert');
+const {convert} = require('../lib/convert');
 
 describe('smoke conversion tools', () => {
   let fs;
