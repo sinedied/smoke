@@ -1,4 +1,3 @@
-- Mock collection recording (`--collection <file>`)
 - Appveyor CI
 - Fix accept matches with JS mocks (preload before matching final accept filter)
 - CLI unit tests

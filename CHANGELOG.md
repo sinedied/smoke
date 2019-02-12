@@ -1,3 +1,10 @@
+# 2.1.0
+- Add `--collection` option to allow recording to a mock collection
+- Add `--save-query` option to save query parameters when recording
+- Add `--depth` option for mock conversion
+- Change shorthand param for `--ignore` from `-g` to `-i`
+- Fix `--ignore` param for `smoke-conv` tool
+
 # 2.0.0
 - Add support for single file mock collections
 - Add mock collection conversion utility
