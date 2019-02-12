@@ -18,6 +18,7 @@ Base options:
 
 Mock recording:
   -r, --record <host>     Proxy & record requests if no mock found
+  -c, --collection <file> Save to single file mock collection
   -d, --depth <N>         Folder depth for mocks  [default: 1]
   -a, --save-headers      Save response headers
   -q, --save-query        Save query parameters
@@ -26,7 +27,7 @@ Mock recording:
 function run(args) {
   const options = minimist(args, {
     number: ['port', 'depth'],
-    string: ['host', 'set', 'not-found', 'record', 'ignore', 'hooks', 'proxy'],
+    string: ['host', 'set', 'not-found', 'record', 'ignore', 'hooks', 'proxy', 'collection'],
     boolean: ['help', 'version', 'logs', 'save-headers', 'save-query'],
     alias: {
       p: 'port',
@@ -35,6 +36,7 @@ function run(args) {
       n: 'not-found',
       v: 'version',
       r: 'record',
+      c: 'collection',
       d: 'depth',
       a: 'save-headers',
       q: 'save-query',
@@ -54,6 +56,7 @@ function run(args) {
     proxy: options.proxy,
     logs: options.logs,
     record: options.record,
+    collection: options.collection,
     depth: options.depth,
     saveHeaders: options['save-headers'],
     saveQueryParams: options['save-query']
