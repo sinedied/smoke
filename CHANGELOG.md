@@ -1,3 +1,6 @@
+# 2.1.1
+- Update documentation regarding collection recording
+
 # 2.1.0
 - Add `--collection` option to allow recording to a mock collection
 - Add `--save-query` option to save query parameters when recording
