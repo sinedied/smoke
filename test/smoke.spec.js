@@ -356,6 +356,33 @@ describe('smoke server', () => {
       );
     });
 
+    it('should proxy request and save mock with prettified JSON', async () => {
+      const data = '{"json":"test"}';
+      mockProxy.mockImplementation((_host, options) => async (req, res) => {
+        await options.userResDecorator(
+          {
+            statusCode: 200,
+            headers: {'Content-Type': 'application/json'}
+          },
+          Buffer.from(data),
+          req
+        );
+        res.status(200).send(data);
+      });
+      app = createServer({...options, record: 'http://record.to'});
+      const response = await request(app)
+        .get('/api/hello-new')
+        .expect(200);
+
+      expect(response.text).toBe(data);
+      expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
+      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.writeFile).toHaveBeenCalledWith(
+        path.join(options.basePath, 'api/get_hello-new.json'),
+        '{\n  "json": "test"\n}'
+      );
+    });
+
     it('should proxy request and save with min depth', async () => {
       app = createServer({...options, record: 'http://record.to', depth: 0});
       const response = await request(app)
