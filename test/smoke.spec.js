@@ -212,7 +212,6 @@ describe('smoke server', () => {
     it('should match any type', async () => {
       await request(app)
         .post('/api/text')
-        .expect('Content-Type', 'application/octet-stream')
         .expect(200);
     });
 
@@ -221,6 +220,11 @@ describe('smoke server', () => {
         .post('/api/text')
         .set('Accept', 'text/*')
         .expect('Content-Type', /text\/plain/)
+        .expect(200);
+      await request(app)
+        .post('/api/text')
+        .set('Accept', 'application/*')
+        .expect('Content-Type', /application\/octet-stream/)
         .expect(200);
     });
   });
