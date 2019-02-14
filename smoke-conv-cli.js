@@ -31,13 +31,13 @@ async function run(args) {
     }
   });
 
-  if (options.help || options._.length !== 2) {
-    return console.log(help);
-  }
-
   if (options.version) {
     const pkg = require('./package.json');
     return console.log(pkg.version);
+  }
+
+  if (options.help || options._.length !== 2) {
+    return console.log(help);
   }
 
   await convert(options._[0], options._[1], options.ignore, options.depth);

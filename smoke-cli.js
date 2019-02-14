@@ -45,6 +45,16 @@ function run(args) {
       x: 'proxy'
     }
   });
+
+  if (options.version) {
+    const pkg = require('./package.json');
+    return console.log(pkg.version);
+  }
+
+  if (options.help) {
+    return console.log(help);
+  }
+
   const app = createServer({
     basePath: options._[0],
     port: options.port,
@@ -61,15 +71,6 @@ function run(args) {
     saveHeaders: options['save-headers'],
     saveQueryParams: options['save-query']
   });
-
-  if (options.help) {
-    return console.log(help);
-  }
-
-  if (options.version) {
-    const pkg = require('./package.json');
-    return console.log(pkg.version);
-  }
 
   if (app) {
     startServer(app);
