@@ -511,6 +511,7 @@ describe('smoke server', () => {
         JSON.stringify(
           {
             statusCode: 401,
+            headers: {'Content-Type': 'text/plain'},
             body: 'hello'
           },
           null,
