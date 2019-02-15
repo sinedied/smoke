@@ -1,3 +1,6 @@
+# 2.2.2
+- Fix route matching with empty path components
+
 # 2.2.1
 - Fix route matching when filename has no route
 
