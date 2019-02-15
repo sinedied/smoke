@@ -74,7 +74,7 @@ Mock recording:
 
 ### File naming
 
-**General format:** `methods_api#route#:routeParam$queryParam=value.__et.extension`
+**General format:** `methods_api#route#@routeParam$queryParam=value.__et.extension`
 
 The path and file name of the mock is used to determinate:
 
@@ -89,8 +89,8 @@ Use any combination of folders or hash-separated components to specify the serve
 For example `api/example/get_hello.json` is equivalent to `get_api#example#hello.json` and will repond to
 `GET api/example/hello` requests.
 
-Additionaly, any route component can be defined as a route parameter by prefixing the name with `:`, for example
-`api#resource#:id.json` will match `GET api/resource/1` and expose `1` as the value for the `id` parameter that can be
+Additionaly, any route component can be defined as a route parameter by prefixing the name with `@`, for example
+`api#resource#@id.json` will match `GET api/resource/1` and expose `1` as the value for the `id` parameter that can be
 used in dynamic mocks (templates or JavaScript).
 
 #### Query parameters
@@ -137,7 +137,7 @@ Every template can use an implicit context object that have these properties def
 - `method`: the HTTP method of the request (ex: `'GET'`, `'POST'`)
 - `query`: map with query parameters that were part of the request URL. For example, matched URL
   `http://server/hello?who=world` will result in the query value: `{ who: 'world' }`.
-- `params`: map containing matched route parameters. For example the mock `resource#:id.json` with the matched URL
+- `params`: map containing matched route parameters. For example the mock `resource#@id.json` with the matched URL
   `http://server/resource/123` will result in the params value: `{ id: '123' }`.
 - `headers`: map containing request headers
 - `body`: the request body. JSON bodies are automatically parsed.

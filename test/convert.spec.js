@@ -43,8 +43,8 @@ Array [
     \\"Chuck Norris writes code that optimizes itself.\\"
   ],
   \\"get_test#mocks#api#random.js\\": data => num.toString(),
-  \\"get_test#mocks#api#test#:id__500.json_\\": \\"{\\\\n  \\\\\\"statusCode\\\\\\": 500,\\\\n  \\\\\\"body\\\\\\": {\\\\n    \\\\\\"message\\\\\\": \\\\\\"Error\\\\\\"\\\\n  }\\\\n}\\\\n\\",
-  \\"get_test#mocks#api#test#:id.json_\\": \\"{\\\\n  \\\\\\"statusCode\\\\\\": 200,\\\\n  \\\\\\"headers\\\\\\": {\\\\n    \\\\\\"custom-header\\\\\\": \\\\\\"hello\\\\\\"\\\\n  },\\\\n  \\\\\\"body\\\\\\": {\\\\n    \\\\\\"message\\\\\\": \\\\\\"id: {{params.id}}\\\\\\",\\\\n    \\\\\\"query\\\\\\": {{JSON.stringify(query)}}\\\\n  }\\\\n}\\\\n\\",
+  \\"get_test#mocks#api#test#@id__500.json_\\": \\"{\\\\n  \\\\\\"statusCode\\\\\\": 500,\\\\n  \\\\\\"body\\\\\\": {\\\\n    \\\\\\"message\\\\\\": \\\\\\"Error\\\\\\"\\\\n  }\\\\n}\\\\n\\",
+  \\"get_test#mocks#api#test#@id.json_\\": \\"{\\\\n  \\\\\\"statusCode\\\\\\": 200,\\\\n  \\\\\\"headers\\\\\\": {\\\\n    \\\\\\"custom-header\\\\\\": \\\\\\"hello\\\\\\"\\\\n  },\\\\n  \\\\\\"body\\\\\\": {\\\\n    \\\\\\"message\\\\\\": \\\\\\"id: {{params.id}}\\\\\\",\\\\n    \\\\\\"query\\\\\\": {{JSON.stringify(query)}}\\\\n  }\\\\n}\\\\n\\",
   \\"test#mocks#api#hello.json\\": null,
   \\"test#mocks#api#text\\": {
     \\"statusCode\\": 200,
@@ -126,6 +126,10 @@ Array [
     "{
   \\"hello\\": \\"not used\\"
 }",
+  ],
+  Array [
+    "mocks/api/get_ping#@who.txt_",
+    "pong {{params.who}}!",
   ],
 ]
 `);

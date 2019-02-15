@@ -33,5 +33,8 @@ module.exports = {
   },
 
   // Mock that conflicts with existing file mock
-  'get_api#hello.json': {hello: 'not used'}
+  'get_api#hello.json': {hello: 'not used'},
+
+  // Mock with route params
+  'api/get_ping#@who.txt_': 'pong {{params.who}}!',
 };
