@@ -40,6 +40,14 @@ describe('smoke server', () => {
         .expect(200)
         .expect('Content-Type', /jpeg/);
     });
+
+    it('should route file with empty route', async () => {
+      const response = await request(app)
+        .get('/')
+        .expect(200);
+
+      expect(response.text).toContain('Welcome!');
+    });
   });
 
   describe('should allow templates', () => {
