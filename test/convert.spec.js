@@ -5,6 +5,11 @@ const {convert} = require('../lib/convert');
 describe('smoke conversion tools', () => {
   let fs;
 
+  function uniformizePaths(mock) {
+    mock.calls = mock.calls.map(([file, data]) => [file.replace(/\\/g, '/'), data]);
+    return mock;
+  }
+
   beforeEach(() => {
     process.chdir(path.join(__dirname, '..'));
     fs = require('fs-extra');
@@ -71,7 +76,7 @@ Array [
   describe('should convert a mock collection to separate mocks', () => {
     it('should convert a mock collection to separate mocks', async () => {
       await convert('test/mocks/collection.mocks.js', 'mocks', null, null);
-      expect(fs.writeFile.mock.calls).toMatchInlineSnapshot(`
+      expect(uniformizePaths(fs.writeFile.mock).calls).toMatchInlineSnapshot(`
 Array [
   Array [
     "mocks/api/get_ping.txt",
@@ -137,17 +142,17 @@ Array [
 
     it('should convert to separate mocks with depth 0', async () => {
       await convert('test/mocks/collection.mocks.js', 'mocks', null, 0);
-      expect(fs.writeFile.mock.calls[0][0]).toEqual('mocks/get_api#ping.txt');
+      expect(uniformizePaths(fs.writeFile.mock).calls[0][0]).toEqual('mocks/get_api#ping.txt');
     });
 
     it('should convert to separate mocks with depth 1', async () => {
       await convert('test/mocks/collection.mocks.js', 'mocks', null, 1);
-      expect(fs.writeFile.mock.calls[0][0]).toEqual('mocks/api/get_ping.txt');
+      expect(uniformizePaths(fs.writeFile.mock).calls[0][0]).toEqual('mocks/api/get_ping.txt');
     });
 
     it('should convert to separate mocks with max. depth', async () => {
       await convert('test/mocks/collection.mocks.js', 'mocks', null, 10);
-      expect(fs.writeFile.mock.calls[0][0]).toEqual('mocks/api/ping/get_.txt');
+      expect(uniformizePaths(fs.writeFile.mock).calls[0][0]).toEqual('mocks/api/ping/get_.txt');
     });
   });
 });
