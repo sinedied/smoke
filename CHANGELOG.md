@@ -1,3 +1,12 @@
+# 2.2.0
+- Prettify recorded JSON mocks
+- Fix recorded mock content type in some cases
+
+## Deprecation notice
+- Change route params prefix from `:` to `@` to fix Windows-naming issue
+  **Note**: old syntax with `:` still works, but mocks using this syntax will
+  not be working on Windows filesystem.
+
 # 2.1.1
 - Update documentation regarding collection recording
 

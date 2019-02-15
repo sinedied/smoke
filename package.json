@@ -1,6 +1,6 @@
 {
   "name": "smoke",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Simple yet powerful file-based mock server with recording abilities",
   "main": "lib/smoke.js",
   "bin": {
@@ -34,7 +34,7 @@
     "globby": "^9.0.0",
     "import-fresh": "^3.0.0",
     "lodash.template": "^4.4.0",
-    "mime-types": "^2.1.21",
+    "mime-types": "^2.1.22",
     "minimist": "^1.2.0",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
