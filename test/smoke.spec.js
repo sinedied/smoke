@@ -48,6 +48,14 @@ describe('smoke server', () => {
 
       expect(response.text).toContain('Welcome!');
     });
+
+    it('should route file with empty route in folder', async () => {
+      const response = await request(app)
+        .get('/api')
+        .expect(200);
+
+      expect(response.body).toEqual(Buffer.from('v1\n'));
+    });
   });
 
   describe('should allow templates', () => {

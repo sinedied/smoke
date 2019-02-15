@@ -25,6 +25,11 @@ Array [
   Array [
     "collection.mocks.js",
     "module.exports = {
+  \\"get_test#mocks#api\\": {
+    \\"statusCode\\": 200,
+    \\"body\\": \\"djEK\\",
+    \\"buffer\\": true
+  },
   \\"get_test#mocks#api#buffer.json\\": {
     \\"statusCode\\": 200,
     \\"body\\": \\"U21va2Ugcm9ja3Mh\\",
