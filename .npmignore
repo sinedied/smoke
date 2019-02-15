@@ -5,6 +5,7 @@ test/
 .editorconfig
 *.spec.js
 .travis.yml
+appveyor.yml
 .DS_Store
 Thumbs.db
 TODO
