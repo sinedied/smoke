@@ -1,3 +1,6 @@
+# 2.2.1
+- Fix route matching when filename has no route
+
 # 2.2.0
 - Prettify recorded JSON mocks
 - Fix recorded mock content type in some cases
