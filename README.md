@@ -74,7 +74,7 @@ Mock recording:
 
 ### File naming
 
-**General format:** `methods_api#route#@routeParam$queryParam=value.__et.extension`
+**General format:** `methods_api#route#@routeParam$queryParam=value.__set.extension`
 
 The path and file name of the mock is used to determinate:
 
