@@ -97,13 +97,13 @@ used in dynamic mocks (templates or JavaScript).
 You can further discriminate mocks by adding query parameters to match after defining the route, using a `$` (instead
 of the regular `?`) like you would specify them in a request.
 
-For example `get_api#hello?who=john.json` will match the request `api/get_hello?who=john.json`.
+For example `get_api#hello$who=john.json` will match the request `api/get_hello?who=john.json`.
 
-Multiple query parameters to match can be added with `&`, for example `get_api#hello?who=john&greet=hi.json`.
+Multiple query parameters to match can be added with `&`, for example `get_api#hello$who=john&greet=hi.json`.
 Any specified query parameter in the file name must be matched (in any order) by the request, but the opposite is not
 needed.
 
-Note that special characters must be URL-encoded, for example use `get_api#hello?who=john%20doe.json` to set the
+Note that special characters must be URL-encoded, for example use `get_api#hello$who=john%20doe.json` to set the
 parameter `who` with the value `john doe`.
 
 > Tip: If you need to URL-encode a string, just run `node -p "encodeURIComponent('some string')"` in a terminal.
