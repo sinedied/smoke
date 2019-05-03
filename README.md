@@ -137,7 +137,7 @@ Every template can use an implicit context object that have these properties def
 - `method`: the HTTP method of the request (ex: `'GET'`, `'POST'`)
 - `query`: map with query parameters that were part of the request URL. For example, matched URL
   `http://server/hello?who=world` will result in the query value: `{ who: 'world' }`.
-- `params`: map containing matched route parameters. For example the mock `resource#@id.json` with the matched URL
+- `params`: map containing matched route parameters. For example the mock `resource#@id.json_` with the matched URL
   `http://server/resource/123` will result in the params value: `{ id: '123' }`.
 - `headers`: map containing request headers
 - `body`: the request body. JSON bodies are automatically parsed.
