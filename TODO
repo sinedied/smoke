@@ -1,2 +1,4 @@
 - Fix accept matches with JS mocks (preload before matching final accept filter)
 - Improve performance with optional caching
+- Fix recording for raw assets (.js, .bin, fonts...)
+- Add option to serve static assets more simply (with default static/ folder?) (and record as such)
