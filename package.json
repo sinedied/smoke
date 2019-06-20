@@ -1,6 +1,6 @@
 {
   "name": "smoke",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Simple yet powerful file-based mock server with recording abilities",
   "main": "lib/smoke.js",
   "bin": {

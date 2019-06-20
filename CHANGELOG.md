@@ -1,3 +1,6 @@
+# 2.2.3
+- Bump dependencies and fix vulnerabilities
+
 # 2.2.2
 - Fix route matching with empty path components
 
