@@ -1,3 +1,6 @@
+# 2.2.4
+- Bump dependencies and fix vulnerabilities
+
 # 2.2.3
 - Bump dependencies and fix vulnerabilities
 
