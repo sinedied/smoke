@@ -1,0 +1,50 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+strategy:
+  matrix:
+    linux-node8:
+      imageName: 'ubuntu-latest'
+      nodeVersion: '8.x'
+    linux-node-latest:
+      imageName: 'ubuntu-latest'
+      nodeVersion: '12.x'
+    mac-node8:
+      imageName: 'macos-latest'
+      nodeVersion: '8.x'
+    mac-node-latest:
+      imageName: 'macos-latest'
+      nodeVersion: '12.x'
+    windows-node8:
+      imageName: 'windows-latest'
+      nodeVersion: '8.x'
+    windows-node-latest:
+      imageName: 'windows-latest'
+      nodeVersion: '12.x'
+
+pool:
+  vmImage: $(imageName)
+
+trigger:
+- master
+
+steps:
+  # Needed to avoid issues with Prettier & Jest snapshots
+- script: git config --global core.autocrlf false
+  displayName: 'Disable git automatic line ending conversion'
+
+- checkout: self
+  fetchDepth: 1
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: $(nodeVersion)
+  displayName: 'Install Node.js'
+
+- script: npm install
+  displayName: 'Install dependencies'
+
+- script: npm test
+  displayName: 'Run unit tests'

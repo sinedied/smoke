@@ -1,8 +1,7 @@
 # :dash: smoke
 
 [![NPM version](https://img.shields.io/npm/v/smoke.svg)](https://www.npmjs.com/package/smoke)
-[![Travis build status](https://img.shields.io/travis/sinedied/smoke/master.svg)](https://travis-ci.org/sinedied/smoke)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/sinedied/smoke?svg=true&branch=master)](https://ci.appveyor.com/project/sinedied/smoke/branch/master)
+[![Build Status](https://sinedied.visualstudio.com/oss-pipelines/_apis/build/status/sinedied.smoke?branchName=master)](https://sinedied.visualstudio.com/oss-pipelines/_build/latest?definitionId=1&branchName=master&WT.mc_id=sinediedsmoke-github-yolasors)
 ![Node version](https://img.shields.io/node/v/smoke.svg)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
