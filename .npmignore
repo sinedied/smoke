@@ -5,8 +5,7 @@ coverage/
 .gitignore
 .editorconfig
 *.spec.js
-.travis.yml
-appveyor.yml
+.azure-pipelines.yml
 .DS_Store
 Thumbs.db
 TODO
