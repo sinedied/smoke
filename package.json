@@ -2,6 +2,10 @@
   "name": "smoke",
   "version": "2.2.4",
   "description": "Simple yet powerful file-based mock server with recording abilities",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sinedied/smoke.git"
+  },
   "main": "lib/smoke.js",
   "bin": {
     "smoke": "./bin/smoke",
@@ -24,7 +28,14 @@
     "rest",
     "template"
   ],
-  "author": "Yohan Lasorsa",
+  "author": {
+    "name": "Yohan Lasorsa",
+    "url": "https://twitter.com/sinedied"
+  },
+  "homepage": "https://github.com/sinedied/smoke",
+  "bugs": {
+    "url": "https://github.com/sinedied/smoke/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.0",
