@@ -16,43 +16,30 @@ describe('smoke server', () => {
 
   describe('should handle routing', () => {
     it('should route with file name', async () => {
-      await request(app)
-        .get('/api/version')
-        .expect(200);
+      await request(app).get('/api/version').expect(200);
     });
 
     it('should route with folder, file name and params', async () => {
-      await request(app)
-        .get('/api/test/1')
-        .expect(200);
+      await request(app).get('/api/test/1').expect(200);
     });
 
     it('should ignore node_modules if no basePath is specified', async () => {
       app = createServer();
-      await request(app)
-        .get('/node_modules/jest/package')
-        .expect(404);
+      await request(app).get('/node_modules/jest/package').expect(404);
     });
 
     it('should route with file name with extension', async () => {
-      await request(app)
-        .get('/cat.jpg')
-        .expect(200)
-        .expect('Content-Type', /jpeg/);
+      await request(app).get('/cat.jpg').expect(200).expect('Content-Type', /jpeg/);
     });
 
     it('should route file with empty route', async () => {
-      const response = await request(app)
-        .get('/')
-        .expect(200);
+      const response = await request(app).get('/').expect(200);
 
       expect(response.text).toContain('Welcome!');
     });
 
     it('should route file with empty route in folder', async () => {
-      const response = await request(app)
-        .get('/api')
-        .expect(200);
+      const response = await request(app).get('/api').expect(200);
 
       expect(response.body).toEqual(Buffer.from('v1\n'));
     });
@@ -60,18 +47,13 @@ describe('smoke server', () => {
 
   describe('should allow templates', () => {
     it('should render template', async () => {
-      const response = await request(app)
-        .get('/headers')
-        .expect(200);
+      const response = await request(app).get('/headers').expect(200);
 
       expect(response.text).toContain('user-agent: node-superagent');
     });
 
     it('should espace HTML special chars', async () => {
-      const response = await request(app)
-        .get('/headers')
-        .set('to-escape', '<a&b>')
-        .expect(200);
+      const response = await request(app).get('/headers').set('to-escape', '<a&b>').expect(200);
 
       expect(response.text).toContain('to-escape: &lt;a&amp;b&gt;');
     });
@@ -86,10 +68,7 @@ describe('smoke server', () => {
 
   describe('should allow JS mocks', () => {
     it('should render JS', async () => {
-      await request(app)
-        .get('/api/random')
-        .expect(200)
-        .expect('Content-Type', /json/);
+      await request(app).get('/api/random').expect(200).expect('Content-Type', /json/);
     });
 
     it('should not cache JS mocks', async () => {
@@ -119,29 +98,20 @@ describe('smoke server', () => {
 
   describe('should handle custom responses', () => {
     it('should set custom header', async () => {
-      await request(app)
-        .get('/api/test/1')
-        .expect('custom-header', 'hello')
-        .expect('Content-Type', /json/);
+      await request(app).get('/api/test/1').expect('custom-header', 'hello').expect('Content-Type', /json/);
     });
 
     it('should set custom status', async () => {
       app = createServer({...options, set: '500'});
-      await request(app)
-        .get('/api/test/1')
-        .expect(500);
+      await request(app).get('/api/test/1').expect(500);
     });
 
     it('should set custom response using JS mock', async () => {
-      await request(app)
-        .get('/user-agent')
-        .expect('Some-Header', 'Hey there!');
+      await request(app).get('/user-agent').expect('Some-Header', 'Hey there!');
     });
 
     it('should use base64 buffer from custom response', async () => {
-      const response = await request(app)
-        .get('/api/buffer')
-        .expect(200);
+      const response = await request(app).get('/api/buffer').expect(200);
 
       expect(response.body.toString('utf8')).toBe('Smoke rocks!');
     });
@@ -149,56 +119,40 @@ describe('smoke server', () => {
 
   describe('should discriminate http methods', () => {
     it('should use specific mock for get method', async () => {
-      const response = await request(app)
-        .get('/api/hello')
-        .expect(200);
+      const response = await request(app).get('/api/hello').expect(200);
 
       expect(response.body.hello).toBe('world');
     });
 
     it('should fall back to default mock with no method', async () => {
-      await request(app)
-        .post('/api/hello')
-        .expect(204);
+      await request(app).post('/api/hello').expect(204);
     });
 
     it('should support multiple methods', async () => {
-      await request(app)
-        .post('/ping')
-        .expect(200);
+      await request(app).post('/ping').expect(200);
 
-      await request(app)
-        .put('/ping')
-        .expect(200);
+      await request(app).put('/ping').expect(200);
 
-      await request(app)
-        .get('/ping')
-        .expect(404);
+      await request(app).get('/ping').expect(404);
     });
   });
 
   describe('should discriminate with query params', () => {
     it('should use mock matching query param', async () => {
-      const response = await request(app)
-        .get('/api/hello?who=john%20doe')
-        .expect(200);
+      const response = await request(app).get('/api/hello?who=john%20doe').expect(200);
 
       expect(response.body.hello).toBe('john');
     });
 
     it('should use mock matching one query param among many', async () => {
-      const response = await request(app)
-        .get('/api/hello?some=value&who=john%20doe')
-        .expect(200);
+      const response = await request(app).get('/api/hello?some=value&who=john%20doe').expect(200);
 
       expect(response.body.hello).toBe('john');
     });
 
     it('should use mock matching query param over matching set', async () => {
       app = createServer({...options, set: 'other'});
-      const response = await request(app)
-        .get('/api/hello?who=john%20doe')
-        .expect(200);
+      const response = await request(app).get('/api/hello?who=john%20doe').expect(200);
 
       expect(response.body.hello).toBe('john');
     });
@@ -206,19 +160,13 @@ describe('smoke server', () => {
 
   describe('should get data from request', () => {
     it('should get JSON data from post', async () => {
-      const response = await request(app)
-        .post('/ping')
-        .send({message: 'test'})
-        .expect(200);
+      const response = await request(app).post('/ping').send({message: 'test'}).expect(200);
 
       expect(response.body.message).toEqual('Pong test');
     });
 
     it('should get form data from post', async () => {
-      const response = await request(app)
-        .post('/ping')
-        .send('message=test')
-        .expect(200);
+      const response = await request(app).post('/ping').send('message=test').expect(200);
 
       expect(response.body.message).toEqual('Pong test');
     });
@@ -226,9 +174,7 @@ describe('smoke server', () => {
 
   describe('should respect accept header', () => {
     it('should match any type', async () => {
-      await request(app)
-        .post('/api/text')
-        .expect(200);
+      await request(app).post('/api/text').expect(200);
     });
 
     it('should match only specified type', async () => {
@@ -254,19 +200,11 @@ describe('smoke server', () => {
     });
 
     it('should use custom 404 with given type', async () => {
-      await request(app)
-        .get('/not-found')
-        .set('Accept', 'application/json')
-        .expect(404)
-        .expect('Content-Type', /json/);
+      await request(app).get('/not-found').set('Accept', 'application/json').expect(404).expect('Content-Type', /json/);
     });
 
     it('should fall back to default 404', async () => {
-      await request(app)
-        .get('/not-found')
-        .set('Accept', 'image/png')
-        .expect(404)
-        .expect('Content-Type', /plain/);
+      await request(app).get('/not-found').set('Accept', 'image/png').expect(404).expect('Content-Type', /plain/);
     });
   });
 
@@ -293,18 +231,14 @@ describe('smoke server', () => {
 
     it('should not proxy request if a mock exists', async () => {
       app = createServer({...options, proxy: 'http://proxy.to'});
-      await request(app)
-        .get('/api/version')
-        .expect(200);
+      await request(app).get('/api/version').expect(200);
 
       expect(mockProxy).not.toHaveBeenCalled();
     });
 
     it('should proxy request and get result', async () => {
       app = createServer({...options, proxy: 'http://proxy.to'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
@@ -313,9 +247,7 @@ describe('smoke server', () => {
     it('should proxy request and get error', async () => {
       setupMocks(401);
       app = createServer({...options, proxy: 'http://proxy.to'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(401);
+      const response = await request(app).get('/api/hello-new').expect(401);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://proxy.to', expect.anything());
@@ -350,18 +282,14 @@ describe('smoke server', () => {
 
     it('should not proxy request if a mock exists', async () => {
       app = createServer({...options, record: 'http://record.to'});
-      await request(app)
-        .get('/api/version')
-        .expect(200);
+      await request(app).get('/api/version').expect(200);
 
       expect(mockProxy).not.toHaveBeenCalled();
     });
 
     it('should proxy request and save mock', async () => {
       app = createServer({...options, record: 'http://record.to'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -386,9 +314,7 @@ describe('smoke server', () => {
         res.status(200).send(data);
       });
       app = createServer({...options, record: 'http://record.to'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe(data);
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -401,9 +327,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save with min depth', async () => {
       app = createServer({...options, record: 'http://record.to', depth: 0});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -416,9 +340,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save with max depth', async () => {
       app = createServer({...options, record: 'http://record.to', depth: 50});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -431,9 +353,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save mock with current set', async () => {
       app = createServer({...options, record: 'http://record.to', set: 'test'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -446,9 +366,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save mock with headers', async () => {
       app = createServer({...options, record: 'http://record.to', saveHeaders: true});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -469,9 +387,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save mock with 1 query parameter', async () => {
       app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
-      const response = await request(app)
-        .get('/api/hello-new?who=world')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new?who=world').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -484,9 +400,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save mock with 2 query parameters', async () => {
       app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
-      const response = await request(app)
-        .get('/api/hello-new?who=world&say=[yay!]')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new?who=world&say=[yay!]').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -499,9 +413,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save mock with empty query parameter', async () => {
       app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
-      const response = await request(app)
-        .get('/api/hello-new?who=')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new?who=').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -515,9 +427,7 @@ describe('smoke server', () => {
     it('should proxy request and save custom mock', async () => {
       setupMocks(401);
       app = createServer({...options, record: 'http://record.to'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(401);
+      const response = await request(app).get('/api/hello-new').expect(401);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -538,9 +448,7 @@ describe('smoke server', () => {
 
     it('should proxy request and save to new mock collection', async () => {
       app = createServer({...options, record: 'http://record.to', collection: 'collection'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -571,9 +479,7 @@ describe('smoke server', () => {
       fs.pathExists = jest.fn().mockReturnValue(Promise.resolve(true));
 
       app = createServer({...options, record: 'http://record.to', collection: 'collection'});
-      const response = await request(app)
-        .get('/api/hello-new')
-        .expect(200);
+      const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
@@ -590,25 +496,17 @@ describe('smoke server', () => {
   describe('should ignore files', () => {
     it('should ignore mock', async () => {
       app = createServer({...options, ignore: '*version*'});
-      await request(app)
-        .get('/api/version')
-        .expect(404);
+      await request(app).get('/api/version').expect(404);
     });
 
     it('should ignore mock with absolute path', async () => {
       app = createServer({...options, ignore: path.join(options.basePath, '*version*')});
-      await request(app)
-        .get('/api/version')
-        .expect(404);
+      await request(app).get('/api/version').expect(404);
     });
 
     it('should ignore 404', async () => {
       app = createServer({...options, ignore: '404.html'});
-      await request(app)
-        .get('/not-found')
-        .set('Accept', 'text/html')
-        .expect(404)
-        .expect('Content-Type', /plain/);
+      await request(app).get('/not-found').set('Accept', 'text/html').expect(404).expect('Content-Type', /plain/);
     });
   });
 
@@ -617,46 +515,32 @@ describe('smoke server', () => {
 
     it('should add header via before hook', async () => {
       app = createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
-      await request(app)
-        .get('/api/hello')
-        .expect(200)
-        .expect('Hocus', 'pocus');
+      await request(app).get('/api/hello').expect(200).expect('Hocus', 'pocus');
     });
 
     it('should fail after 1 request via before hook', async () => {
       app = createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
-      await request(app)
-        .get('/api/hello')
-        .expect(200);
+      await request(app).get('/api/hello').expect(200);
 
-      await request(app)
-        .get('/api/hello')
-        .expect(500);
+      await request(app).get('/api/hello').expect(500);
     });
 
     it('should change response body via after hook', async () => {
       app = createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
-      const response = await request(app)
-        .get('/api/hello')
-        .expect(200);
+      const response = await request(app).get('/api/hello').expect(200);
 
       expect(response.body).toEqual({text: 'hooked!'});
     });
 
     it('should ignore hooks file when searching for mocks', async () => {
       app = createServer({basePath: path.join(__dirname, '../test'), hooks: path.join(__dirname, '../test/hooks.js')});
-      await request(app)
-        .get('/hooks')
-        .expect(404);
+      await request(app).get('/hooks').expect(404);
     });
   });
 
   describe('should handle mock collections', () => {
     it('should match simple mock', async () => {
-      const response = await request(app)
-        .get('/api/ping')
-        .expect(200)
-        .expect('Content-Type', /text/);
+      const response = await request(app).get('/api/ping').expect(200).expect('Content-Type', /text/);
 
       expect(response.text).toEqual('pong!');
     });
@@ -682,72 +566,51 @@ describe('smoke server', () => {
     });
 
     it('should allow template mock', async () => {
-      const response = await request(app)
-        .put('/api/ping?who=you')
-        .expect(200)
-        .expect('Content-Type', /text/);
+      const response = await request(app).put('/api/ping?who=you').expect(200).expect('Content-Type', /text/);
 
       expect(response.text).toEqual('pong template you');
     });
 
     it('should support mock with no content', async () => {
-      const response = await request(app)
-        .delete('/api/ping')
-        .expect(204);
+      const response = await request(app).delete('/api/ping').expect(204);
 
       expect(response.text).toBe('');
     });
 
     it('should support mock set', async () => {
       app = createServer({...options, set: '503'});
-      const response = await request(app)
-        .get('/api/ping')
-        .expect(503);
+      const response = await request(app).get('/api/ping').expect(503);
 
       expect(response.body.message).toEqual('Not available');
     });
 
     it('should discriminate mock with query param', async () => {
-      const response = await request(app)
-        .get('/api/ping?who=john')
-        .expect(200)
-        .expect('Content-Type', /text/);
+      const response = await request(app).get('/api/ping?who=john').expect(200).expect('Content-Type', /text/);
 
       expect(response.text).toEqual('pong john!');
     });
 
     it('should support mock with buffer content', async () => {
-      const response = await request(app)
-        .get('/api/ping/me')
-        .expect(200)
-        .expect('Content-Type', /text/);
+      const response = await request(app).get('/api/ping/me').expect(200).expect('Content-Type', /text/);
 
       expect(response.text).toEqual('pong 64!');
     });
 
     it('should prioritize file mock over mock in collection', async () => {
-      const response = await request(app)
-        .get('/api/hello')
-        .expect(200);
+      const response = await request(app).get('/api/hello').expect(200);
 
       expect(response.text).not.toEqual('not used');
     });
 
     it('should support collection for 404 errors', async () => {
       app = createServer({...options, notFound: '404.mocks.js'});
-      const response = await request(app)
-        .get('/api/not-found')
-        .expect(404)
-        .expect('Content-Type', /text/);
+      const response = await request(app).get('/api/not-found').expect(404).expect('Content-Type', /text/);
 
       expect(response.text).toEqual('Duh! Nothing there...');
     });
 
     it('should support file name with extension', async () => {
-      await request(app)
-        .get('/cat2.jpg')
-        .expect(200)
-        .expect('Content-Type', /jpeg/);
+      await request(app).get('/cat2.jpg').expect(200).expect('Content-Type', /jpeg/);
     });
   });
 });
