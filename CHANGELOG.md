@@ -1,3 +1,9 @@
+# 3.0.0
+- Bump dependencies and fix vulnerabilities
+
+## Breaking changes
+- Require Node.js >= 10
+
 # 2.2.4
 - Bump dependencies and fix vulnerabilities
 
