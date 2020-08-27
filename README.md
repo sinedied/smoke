@@ -36,6 +36,7 @@ complex setup. Yet, it supports many advanced features and dynamic mocks for alm
 - Customize headers and status code if needed, automatically detect content-type if not specified
 - Add custom middlewares to modify requests/responses
 - Mock only specific requests and proxy the rest to an existing server
+- Supports CORS (cross-origin resource-sharing)
 
 ## Installation
 
@@ -52,23 +53,24 @@ CLI usage is quite straightforward you can just run `smoke` unless you want to a
 Usage: smoke [<mocks_folder>] [options]
 
 Base options:
-  -p, --port <num>        Server port           [default: 3000]
-  -h, --host <host>       Server host           [default: "localhost"]
-  -s, --set <name>        Mocks set to use      [default: none]
-  -n, --not-found <glob>  Mocks for 404 errors  [default: "404.*"]
-  -i, --ignore <glob>     Files to ignore       [default: none]
-  -k, --hooks <file>      Middleware hooks      [default: none]
-  -x, --proxy <host>      Fallback proxy if no mock found
-  -l, --logs              Enable server logs
-  -v, --version           Show version
-  --help                  Show help
+  -p, --port <num>                  Server port           [default: 3000]
+  -h, --host <host>                 Server host           [default: "localhost"]
+  -s, --set <name>                  Mocks set to use      [default: none]
+  -n, --not-found <glob>            Mocks for 404 errors  [default: "404.*"]
+  -i, --ignore <glob>               Files to ignore       [default: none]
+  -k, --hooks <file>                Middleware hooks      [default: none]
+  -x, --proxy <host>                Fallback proxy if no mock found
+  -o, --allow-cors [all|<hosts>]    Enable CORS requests  [default: none]
+  -l, --logs                        Enable server logs
+  -v, --version                     Show version
+  --help                            Show help
 
 Mock recording:
-  -r, --record <host>     Proxy & record requests if no mock found
-  -c, --collection <file> Save to single file mock collection
-  -d, --depth <N>         Folder depth for mocks  [default: 1]
-  -a, --save-headers      Save response headers
-  -q, --save-query        Save query parameters
+  -r, --record <host>               Proxy & record requests if no mock found
+  -c, --collection <file>           Save to single file mock collection
+  -d, --depth <N>                   Folder depth for mocks  [default: 1]
+  -a, --save-headers                Save response headers
+  -q, --save-query                  Save query parameters
 ```
 
 ### File naming
@@ -300,6 +302,16 @@ Remember that once you have used `.send()`, `.sendStatus` or `.json()` in a midd
 anymore, that's why you should use the `res.body` property instead if you plan to alter the response later on.
 
 See some [example hooks](test/hooks.js).
+
+## Enabling CORS
+
+Smoke offers support to requests originating from a different origin. However, by default, this would be disabled.
+
+To enable CORS, pass the hosts that you want to allow to `-o` or `--allow-cors` arguments.
+
+**Accepted Values**
+- `all` - Allow requests from `*`
+- `<hosts>` - You could also pass a comma-separated list of hosts that you want to allow requests from something like `'http://localhost:3000,http://example.com'`
 
 ### Single file mock collection
 
