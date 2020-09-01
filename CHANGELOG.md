@@ -1,3 +1,6 @@
+# 3.1.0
+- Add CORS option (PR https://github.com/sinedied/smoke/pull/11)
+
 # 3.0.0
 - Bump dependencies and fix vulnerabilities
 
