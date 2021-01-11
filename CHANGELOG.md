@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/sinedied/smoke/compare/3.1.0...3.1.1) (2021-01-11)
+
+
+### Bug Fixes
+
+* update dependencies ([894de5f](https://github.com/sinedied/smoke/commit/894de5f1868d9a691f791f7d5b4684eaa277700c))
+
 # 3.1.0
 - Add CORS option (PR https://github.com/sinedied/smoke/pull/11)
 
