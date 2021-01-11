@@ -16,7 +16,7 @@
     "lint:fix": "xo --fix",
     "start": "smoke test/mocks",
     "test": "xo && jest",
-    "postpublish": "git tag -a $npm_package_version -m \"$npm_package_version\" && git push --tags"
+    "release:check": "semantic-release --dry-run"
   },
   "keywords": [
     "mock",
@@ -54,6 +54,8 @@
   },
   "devDependencies": {
     "jest": "^26.4.2",
+    "semantic-release": "^17.3.1",
+    "semantic-release-npm-github": "^1.0.4",
     "supertest": "^6.0.1",
     "xo": "^0.37.1"
   },
@@ -83,6 +85,10 @@
   "prettier": {
     "singleQuote": true,
     "bracketSpacing": false
+  },
+  "release": {
+    "extends": "semantic-release-npm-github",
+    "branches": "main"
   },
   "engines": {
     "node": ">=10.0.0"
