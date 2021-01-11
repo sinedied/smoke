@@ -47,9 +47,9 @@ describe('smoke server', () => {
 
   describe('should allow templates', () => {
     it('should render template', async () => {
-      const response = await request(app).get('/headers').expect(200);
+      const response = await request(app).get('/headers').set('x-say', 'hello/world').expect(200);
 
-      expect(response.text).toContain('user-agent: node-superagent');
+      expect(response.text).toContain('x-say: hello/world');
     });
 
     it('should espace HTML special chars', async () => {

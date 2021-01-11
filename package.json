@@ -54,8 +54,8 @@
   },
   "devDependencies": {
     "jest": "^26.4.2",
-    "supertest": "^4.0.2",
-    "xo": "^0.32.1"
+    "supertest": "^6.0.1",
+    "xo": "^0.37.1"
   },
   "xo": {
     "space": true,
@@ -69,8 +69,7 @@
     ],
     "rules": {
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/no-reduce": "off",
-      "unicorn/no-fn-reference-in-iterator": "off"
+      "unicorn/no-array-reduce": "off"
     }
   },
   "jest": {
