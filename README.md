@@ -87,7 +87,7 @@ If no method is specified, the mock will be used for any HTTP method.
 #### Server route and named route parameters
 Use any combination of folders or hash-separated components to specify the server route.
 
-For example `api/example/get_hello.json` is equivalent to `get_api#example#hello.json` and will repond to
+For example `api/example/get_hello.json` is equivalent to `get_api#example#hello.json` and will respond to
 `GET api/example/hello` requests.
 
 Additionaly, any route component can be defined as a route parameter by prefixing the name with `@`, for example
