@@ -98,6 +98,7 @@
     "smoke-conv-cli.js",
     "bin",
     "lib",
-    "test/hooks.js"
+    "test/hooks.js",
+    "ssl"
   ]
 }
