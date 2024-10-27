@@ -29,7 +29,7 @@ function run(args) {
   const options = minimist(args, {
     number: ['port', 'depth'],
     string: ['host', 'set', 'not-found', 'record', 'ignore', 'hooks', 'proxy', 'collection', 'allow-cors'],
-    boolean: ['help', 'version', 'logs', 'save-headers', 'save-query'],
+    boolean: ['help', 'version', 'logs', 'save-headers', 'save-query', 'https'],
     alias: {
       p: 'port',
       h: 'host',
@@ -70,6 +70,7 @@ function run(args) {
     record: options.record,
     collection: options.collection,
     depth: options.depth,
+    https: options.https,
     saveHeaders: options['save-headers'],
     saveQueryParams: options['save-query'],
     cors: options['allow-cors']
