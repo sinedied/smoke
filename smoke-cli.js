@@ -13,6 +13,7 @@ Base options:
   -k, --hooks <file>                Middleware hooks      [default: none]
   -x, --proxy <host>                Fallback proxy if no mock found
   -o, --allow-cors [all|<hosts>]    Enable CORS requests  [default: none]
+  --https                           Enable secure request serving with HTTPS [default: false]
   -l, --logs                        Enable server logs
   -v, --version                     Show version
   --help                            Show help
