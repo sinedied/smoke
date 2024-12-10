@@ -1,6 +1,6 @@
-const run = require('../smoke-cli');
+const run = require('../smoke-cli.js');
 
-jest.mock('../lib/smoke');
+jest.mock('../lib/smoke.js');
 
 describe('smoke CLI', () => {
   const oldLog = console.log;
@@ -8,7 +8,7 @@ describe('smoke CLI', () => {
 
   beforeEach(() => {
     console.log = jest.fn();
-    createServer = require('../lib/smoke').createServer;
+    createServer = require('../lib/smoke.js').createServer;
     createServer.mockReset();
   });
 
