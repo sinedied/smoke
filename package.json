@@ -71,7 +71,9 @@
     ],
     "rules": {
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/no-array-reduce": "off"
+      "unicorn/no-array-reduce": "off",
+      "unicorn/prefer-module": "off",
+      "unicorn/prefer-spread": "off"
     }
   },
   "jest": {

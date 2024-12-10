@@ -1,12 +1,12 @@
-const path = require('path');
-
-const {convert} = require('../lib/convert');
+const process = require('node:process');
+const path = require('node:path');
+const {convert} = require('../lib/convert.js');
 
 describe('smoke conversion tools', () => {
   let fs;
 
   function uniformizePaths(mock) {
-    mock.calls = mock.calls.map(([file, data]) => [file.replace(/\\/g, '/'), data]);
+    mock.calls = mock.calls.map(([file, data]) => [file.replaceAll('\\', '/'), data]);
     return mock;
   }
 
@@ -73,7 +73,7 @@ Array [
       await convert('test/mocks/404.*', 'collection', '**/*.json', null);
       expect(fs.writeFile).toHaveBeenCalledWith(
         'collection.mocks.js',
-        'module.exports = {\n  "test#mocks#404.html": "<!doctype html>\\n<html>\\n  <body><h1>File not found!</h1></body>\\n</html>\\n"\n};\n'
+        'module.exports = {\n  "test#mocks#404.html": "<!doctype html>\\n<html>\\n  <body><h1>File not found!</h1></body>\\n</html>\\n"\n};\n',
       );
     });
   });

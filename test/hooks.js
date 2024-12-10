@@ -22,5 +22,5 @@ function changeBody(req, res, next) {
 
 module.exports = {
   before: [failAfterOneRequest, addHeader],
-  after: [changeBody]
+  after: [changeBody],
 };

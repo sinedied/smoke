@@ -1,6 +1,5 @@
 const minimist = require('minimist');
-
-const {createServer, startServer} = require('./lib/smoke');
+const {createServer, startServer} = require('./lib/smoke.js');
 
 const help = `Usage: smoke [<mocks_folder>] [options]
 
@@ -45,8 +44,8 @@ function run(args) {
       i: 'ignore',
       k: 'hooks',
       x: 'proxy',
-      o: 'allow-cors'
-    }
+      o: 'allow-cors',
+    },
   });
 
   if (options.version) {
@@ -74,7 +73,7 @@ function run(args) {
     https: options.https,
     saveHeaders: options['save-headers'],
     saveQueryParams: options['save-query'],
-    cors: options['allow-cors']
+    cors: options['allow-cors'],
   });
 
   if (app) {

@@ -1,6 +1,5 @@
 const minimist = require('minimist');
-
-const {convert} = require('./lib/convert');
+const {convert} = require('./lib/convert.js');
 
 const help = `Usage: smoke-conv <input_mocks_or_collection> <output_file_or_folder>
 
@@ -27,8 +26,8 @@ async function run(args) {
     alias: {
       v: 'version',
       i: 'ignore',
-      d: 'depth'
-    }
+      d: 'depth',
+    },
   });
 
   if (options.version) {

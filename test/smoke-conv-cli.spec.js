@@ -1,6 +1,6 @@
-const run = require('../smoke-conv-cli');
+const run = require('../smoke-conv-cli.js');
 
-jest.mock('../lib/convert');
+jest.mock('../lib/convert.js');
 
 describe('smoke CLI', () => {
   const oldLog = console.log;
@@ -8,7 +8,7 @@ describe('smoke CLI', () => {
 
   beforeEach(() => {
     console.log = jest.fn();
-    convert = require('../lib/convert').convert;
+    convert = require('../lib/convert.js').convert;
     convert.mockReset();
   });
 

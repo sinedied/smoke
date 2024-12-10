@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const request = require('supertest');
 
 const options = {basePath: path.join(__dirname, '../test/mocks')};
@@ -10,7 +10,7 @@ describe('smoke server', () => {
   let createServer;
 
   beforeEach(() => {
-    createServer = (...args) => require('../lib/smoke').createServer(...args);
+    createServer = (...args) => require('../lib/smoke.js').createServer(...args);
     app = createServer(options);
   });
 
@@ -218,10 +218,10 @@ describe('smoke server', () => {
         await options.userResDecorator(
           {
             statusCode,
-            headers: {'Content-Type': 'text/plain'}
+            headers: {'Content-Type': 'text/plain'},
           },
           Buffer.from('hello'),
-          req
+          req,
         );
         res.status(statusCode).send('hello');
       });
@@ -265,10 +265,10 @@ describe('smoke server', () => {
         await options.userResDecorator(
           {
             statusCode,
-            headers: {'Content-Type': 'text/plain'}
+            headers: {'Content-Type': 'text/plain'},
           },
           Buffer.from('hello'),
-          req
+          req,
         );
         res.status(statusCode).send('hello');
       });
@@ -296,7 +296,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -306,10 +306,10 @@ describe('smoke server', () => {
         await options.userResDecorator(
           {
             statusCode: 200,
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json'},
           },
           Buffer.from(data),
-          req
+          req,
         );
         res.status(200).send(data);
       });
@@ -321,7 +321,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.json'),
-        '{\n  "json": "test"\n}'
+        '{\n  "json": "test"\n}',
       );
     });
 
@@ -334,7 +334,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(options.basePath);
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'get_api#hello-new.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -347,7 +347,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api/hello-new'));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/hello-new/get_.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -360,7 +360,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new__test.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -377,11 +377,11 @@ describe('smoke server', () => {
           {
             statusCode: 200,
             headers: {'Content-Type': 'text/plain'},
-            body: 'hello'
+            body: 'hello',
           },
           null,
-          2
-        )
+          2,
+        ),
       );
     });
 
@@ -394,7 +394,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=world.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -407,7 +407,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=world&say=%5Byay!%5D.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -420,7 +420,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -438,11 +438,11 @@ describe('smoke server', () => {
           {
             statusCode: 401,
             headers: {'Content-Type': 'text/plain'},
-            body: 'hello'
+            body: 'hello',
           },
           null,
-          2
-        )
+          2,
+        ),
       );
     });
 
@@ -455,14 +455,14 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'collection.mocks.js'),
-        'module.exports = {\n  "get_api#hello-new.txt": "hello"\n};\n'
+        'module.exports = {\n  "get_api#hello-new.txt": "hello"\n};\n',
       );
     });
 
     it('should proxy request and save to existing mock collection', async () => {
       jest.resetModules();
       setupMocks();
-      const mock = require('../lib/mock');
+      const mock = require('../lib/mock.js');
       mock.getMocksFromCollections = jest.fn().mockReturnValueOnce(
         Promise.resolve([
           {
@@ -472,9 +472,9 @@ describe('smoke server', () => {
             data: {exist: true},
             ext: 'json',
             set: 'test',
-            isTemplate: false
-          }
-        ])
+            isTemplate: false,
+          },
+        ]),
       );
       fs.pathExists = jest.fn().mockReturnValue(Promise.resolve(true));
 
@@ -488,7 +488,7 @@ describe('smoke server', () => {
       expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath));
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'collection.mocks.js'),
-        'module.exports = {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n'
+        'module.exports = {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n',
       );
     });
   });
