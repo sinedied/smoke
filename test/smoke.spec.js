@@ -309,7 +309,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.txt'),
         Buffer.from('hello'),
@@ -334,7 +334,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe(data);
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.json'),
         '{\n  "json": "test"\n}',
@@ -347,7 +347,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(options.basePath, {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(options.basePath, {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'get_api#hello-new.txt'),
         Buffer.from('hello'),
@@ -360,7 +360,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api/hello-new'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api/hello-new'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/hello-new/get_.txt'),
         Buffer.from('hello'),
@@ -373,7 +373,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new__test.txt'),
         Buffer.from('hello'),
@@ -386,7 +386,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.json'),
         JSON.stringify(
@@ -407,7 +407,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=world.txt'),
         Buffer.from('hello'),
@@ -420,7 +420,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=world&say=%5Byay!%5D.txt'),
         Buffer.from('hello'),
@@ -433,7 +433,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=.txt'),
         Buffer.from('hello'),
@@ -447,7 +447,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.json'),
         JSON.stringify(
@@ -468,7 +468,7 @@ describe('smoke server', () => {
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'collection.mocks.js'),
         'export default {\n  "get_api#hello-new.txt": "hello"\n};\n',
@@ -494,7 +494,7 @@ describe('smoke server', () => {
                 set: 'test',
                 isTemplate: false,
               },
-            ])
+            ]),
           ),
           default: {
             ...originalMock,
@@ -512,7 +512,7 @@ describe('smoke server', () => {
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
       expect(fs.access).toHaveBeenCalled();
       expect(mock.getMocksFromCollections).toHaveBeenCalled();
-      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath), {"recursive": true});
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'collection.mocks.js'),
         'export default {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n',
