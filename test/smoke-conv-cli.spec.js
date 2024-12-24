@@ -1,14 +1,18 @@
-const run = require('../smoke-conv-cli.js');
+import {jest} from '@jest/globals';
 
-jest.mock('../lib/convert.js');
+jest.unstable_mockModule('../lib/convert.js', () => ({
+  convert: jest.fn(),
+}));
 
 describe('smoke CLI', () => {
   const oldLog = console.log;
   let convert;
+  let run;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     console.log = jest.fn();
-    convert = require('../lib/convert.js').convert;
+    convert = (await import('../lib/convert.js')).convert;
+    run = (await import('../smoke-conv-cli.js')).run;
     convert.mockReset();
   });
 
@@ -17,31 +21,31 @@ describe('smoke CLI', () => {
   });
 
   it('should display help', async () => {
-    run(['--help']);
+    await run(['--help']);
     expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^Usage/));
     expect(convert).not.toHaveBeenCalled();
   });
 
   it('should display help if there is less than 2 arguments', async () => {
-    run(['one']);
+    await run(['one']);
     expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^Usage/));
     expect(convert).not.toHaveBeenCalled();
   });
 
   it('should display help if there is more than 2 arguments', async () => {
-    run(['one', 'two', 'three']);
+    await run(['one', 'two', 'three']);
     expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^Usage/));
     expect(convert).not.toHaveBeenCalled();
   });
 
   it('should display version', async () => {
-    run(['--version']);
+    await run(['--version']);
     expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^\d+/));
     expect(convert).not.toHaveBeenCalled();
   });
 
   it('should start conversion', async () => {
-    run(['one', 'two']);
+    await run(['one', 'two']);
     expect(convert).toHaveBeenCalled();
   });
 });

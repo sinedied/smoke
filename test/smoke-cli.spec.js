@@ -1,14 +1,19 @@
-const run = require('../smoke-cli.js');
+import {jest} from '@jest/globals';
 
-jest.mock('../lib/smoke.js');
+jest.unstable_mockModule('../lib/smoke.js', () => ({
+  createServer: jest.fn(),
+  startServer: jest.fn(),
+}));
 
 describe('smoke CLI', () => {
   const oldLog = console.log;
   let createServer;
+  let run;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     console.log = jest.fn();
-    createServer = require('../lib/smoke.js').createServer;
+    createServer = (await import('../lib/smoke.js')).createServer;
+    run = (await import('../smoke-cli.js')).run;
     createServer.mockReset();
   });
 
@@ -17,19 +22,19 @@ describe('smoke CLI', () => {
   });
 
   it('should display help', async () => {
-    run(['--help']);
+    await run(['--help']);
     expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^Usage/));
     expect(createServer).not.toHaveBeenCalled();
   });
 
   it('should display version', async () => {
-    run(['--version']);
+    await run(['--version']);
     expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^\d+/));
     expect(createServer).not.toHaveBeenCalled();
   });
 
   it('should create mock server', async () => {
-    run([]);
+    await run([]);
     expect(createServer).toHaveBeenCalled();
   });
 });

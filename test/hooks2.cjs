@@ -20,5 +20,7 @@ function changeBody(req, res, next) {
   next();
 }
 
-export const before = [failAfterOneRequest, addHeader];
-export const after = [changeBody];
+module.exports = {
+  before: [failAfterOneRequest, addHeader],
+  after: [changeBody],
+};
