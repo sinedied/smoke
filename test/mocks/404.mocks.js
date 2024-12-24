@@ -1,4 +1,4 @@
 // Mock collection is also supported for 404 errors
-module.exports = {
+export default {
   '404.txt': 'Duh! Nothing there...'
 }
