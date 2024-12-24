@@ -94,6 +94,10 @@ describe('smoke server', () => {
 
       expect(response1.body).not.toEqual(response2.body);
     });
+
+    it('should support CJS mocks for backward compatibility', async () => {
+      await request(app).get('/api/random2').expect(200).expect('Content-Type', /json/);
+    });
   });
 
   describe('should use a different mock set', () => {
@@ -638,7 +642,7 @@ describe('smoke server', () => {
     });
 
     it('should support collection for 404 errors', async () => {
-      app = await createServer({...options, notFound: '404.mocks.cjs'});
+      app = await createServer({...options, notFound: '404.mocks.js'});
       const response = await request(app).get('/api/not-found').expect(404).expect('Content-Type', /text/);
 
       expect(response.text).toEqual('Duh! Nothing there...');
