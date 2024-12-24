@@ -1,17 +1,33 @@
-const path = require('path');
-const request = require('supertest');
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import request from 'supertest';
+import {jest} from '@jest/globals';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const options = {basePath: path.join(__dirname, '../test/mocks')};
 
-jest.mock('express-http-proxy');
+jest.unstable_mockModule('express-http-proxy', () => ({
+  default: jest.fn(),
+}));
+
+const originalFs = await import('node:fs/promises');
+jest.unstable_mockModule('node:fs/promises', async () => {
+  return {
+    default: {
+      ...originalFs,
+      writeFile: jest.fn(),
+      mkdir: jest.fn(),
+    },
+  };
+});
 
 describe('smoke server', () => {
   let app;
   let createServer;
 
-  beforeEach(() => {
-    createServer = (...args) => require('../lib/smoke').createServer(...args);
-    app = createServer(options);
+  beforeEach(async () => {
+    createServer = async (...args) => (await import('../lib/smoke.js')).createServer(...args);
+    app = await createServer(options);
   });
 
   describe('should handle routing', () => {
@@ -24,7 +40,7 @@ describe('smoke server', () => {
     });
 
     it('should ignore node_modules if no basePath is specified', async () => {
-      app = createServer();
+      app = await createServer();
       await request(app).get('/node_modules/jest/package').expect(404);
     });
 
@@ -78,18 +94,22 @@ describe('smoke server', () => {
 
       expect(response1.body).not.toEqual(response2.body);
     });
+
+    it('should support CJS mocks for backward compatibility', async () => {
+      await request(app).get('/api/random2').expect(200).expect('Content-Type', /json/);
+    });
   });
 
   describe('should use a different mock set', () => {
     it('should use mock set 500', async () => {
-      app = createServer({...options, set: '500'});
+      app = await createServer({...options, set: '500'});
       const response = await request(app).get('/api/test/1');
 
       expect(response.body).toEqual({message: 'Error'});
     });
 
     it('should fall back to default mock if there is no set variant', async () => {
-      app = createServer({...options, set: '500'});
+      app = await createServer({...options, set: '500'});
       const response = await request(app).get('/api/hello');
 
       expect(response.body).toEqual({hello: 'world'});
@@ -102,7 +122,7 @@ describe('smoke server', () => {
     });
 
     it('should set custom status', async () => {
-      app = createServer({...options, set: '500'});
+      app = await createServer({...options, set: '500'});
       await request(app).get('/api/test/1').expect(500);
     });
 
@@ -151,7 +171,7 @@ describe('smoke server', () => {
     });
 
     it('should use mock matching query param over matching set', async () => {
-      app = createServer({...options, set: 'other'});
+      app = await createServer({...options, set: 'other'});
       const response = await request(app).get('/api/hello?who=john%20doe').expect(200);
 
       expect(response.body.hello).toBe('john');
@@ -211,33 +231,33 @@ describe('smoke server', () => {
   describe('should proxy request', () => {
     let mockProxy;
 
-    function setupMocks(statusCode = 200) {
-      mockProxy = require('express-http-proxy');
+    async function setupMocks(statusCode = 200) {
+      mockProxy = (await import('express-http-proxy')).default;
       mockProxy.mockReset();
       mockProxy.mockImplementation((_host, options) => async (req, res) => {
         await options.userResDecorator(
           {
             statusCode,
-            headers: {'Content-Type': 'text/plain'}
+            headers: {'Content-Type': 'text/plain'},
           },
           Buffer.from('hello'),
-          req
+          req,
         );
         res.status(statusCode).send('hello');
       });
     }
 
-    beforeEach(() => setupMocks());
+    beforeEach(async () => setupMocks());
 
     it('should not proxy request if a mock exists', async () => {
-      app = createServer({...options, proxy: 'http://proxy.to'});
+      app = await createServer({...options, proxy: 'http://proxy.to'});
       await request(app).get('/api/version').expect(200);
 
       expect(mockProxy).not.toHaveBeenCalled();
     });
 
     it('should proxy request and get result', async () => {
-      app = createServer({...options, proxy: 'http://proxy.to'});
+      app = await createServer({...options, proxy: 'http://proxy.to'});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
@@ -245,8 +265,8 @@ describe('smoke server', () => {
     });
 
     it('should proxy request and get error', async () => {
-      setupMocks(401);
-      app = createServer({...options, proxy: 'http://proxy.to'});
+      await setupMocks(401);
+      app = await createServer({...options, proxy: 'http://proxy.to'});
       const response = await request(app).get('/api/hello-new').expect(401);
 
       expect(response.text).toBe('hello');
@@ -258,45 +278,45 @@ describe('smoke server', () => {
     let fs;
     let mockProxy;
 
-    function setupMocks(statusCode = 200) {
-      mockProxy = require('express-http-proxy');
+    async function setupMocks(statusCode = 200) {
+      mockProxy = (await import('express-http-proxy')).default;
       mockProxy.mockReset();
       mockProxy.mockImplementation((_host, options) => async (req, res) => {
         await options.userResDecorator(
           {
             statusCode,
-            headers: {'Content-Type': 'text/plain'}
+            headers: {'Content-Type': 'text/plain'},
           },
           Buffer.from('hello'),
-          req
+          req,
         );
         res.status(statusCode).send('hello');
       });
 
-      fs = require('fs-extra');
-      fs.mkdirp = jest.fn();
-      fs.writeFile = jest.fn();
+      fs = (await import('node:fs/promises')).default;
+      fs.writeFile.mockReset();
+      fs.mkdir.mockReset();
     }
 
-    beforeEach(() => setupMocks());
+    beforeEach(async () => setupMocks());
 
     it('should not proxy request if a mock exists', async () => {
-      app = createServer({...options, record: 'http://record.to'});
+      app = await createServer({...options, record: 'http://record.to'});
       await request(app).get('/api/version').expect(200);
 
       expect(mockProxy).not.toHaveBeenCalled();
     });
 
     it('should proxy request and save mock', async () => {
-      app = createServer({...options, record: 'http://record.to'});
+      app = await createServer({...options, record: 'http://record.to'});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
@@ -306,206 +326,217 @@ describe('smoke server', () => {
         await options.userResDecorator(
           {
             statusCode: 200,
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json'},
           },
           Buffer.from(data),
-          req
+          req,
         );
         res.status(200).send(data);
       });
-      app = createServer({...options, record: 'http://record.to'});
+      app = await createServer({...options, record: 'http://record.to'});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe(data);
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.json'),
-        '{\n  "json": "test"\n}'
+        '{\n  "json": "test"\n}',
       );
     });
 
     it('should proxy request and save with min depth', async () => {
-      app = createServer({...options, record: 'http://record.to', depth: 0});
+      app = await createServer({...options, record: 'http://record.to', depth: 0});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(options.basePath);
+      expect(fs.mkdir).toHaveBeenCalledWith(options.basePath, {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'get_api#hello-new.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
     it('should proxy request and save with max depth', async () => {
-      app = createServer({...options, record: 'http://record.to', depth: 50});
+      app = await createServer({...options, record: 'http://record.to', depth: 50});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api/hello-new'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api/hello-new'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/hello-new/get_.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
     it('should proxy request and save mock with current set', async () => {
-      app = createServer({...options, record: 'http://record.to', set: 'test'});
+      app = await createServer({...options, record: 'http://record.to', set: 'test'});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new__test.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
     it('should proxy request and save mock with headers', async () => {
-      app = createServer({...options, record: 'http://record.to', saveHeaders: true});
+      app = await createServer({...options, record: 'http://record.to', saveHeaders: true});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.json'),
         JSON.stringify(
           {
             statusCode: 200,
             headers: {'Content-Type': 'text/plain'},
-            body: 'hello'
+            body: 'hello',
           },
           null,
-          2
-        )
+          2,
+        ),
       );
     });
 
     it('should proxy request and save mock with 1 query parameter', async () => {
-      app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
+      app = await createServer({...options, record: 'http://record.to', saveQueryParams: true});
       const response = await request(app).get('/api/hello-new?who=world').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=world.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
     it('should proxy request and save mock with 2 query parameters', async () => {
-      app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
+      app = await createServer({...options, record: 'http://record.to', saveQueryParams: true});
       const response = await request(app).get('/api/hello-new?who=world&say=[yay!]').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=world&say=%5Byay!%5D.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
     it('should proxy request and save mock with empty query parameter', async () => {
-      app = createServer({...options, record: 'http://record.to', saveQueryParams: true});
+      app = await createServer({...options, record: 'http://record.to', saveQueryParams: true});
       const response = await request(app).get('/api/hello-new?who=').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new$who=.txt'),
-        Buffer.from('hello')
+        Buffer.from('hello'),
       );
     });
 
     it('should proxy request and save custom mock', async () => {
-      setupMocks(401);
-      app = createServer({...options, record: 'http://record.to'});
+      await setupMocks(401);
+      app = await createServer({...options, record: 'http://record.to'});
       const response = await request(app).get('/api/hello-new').expect(401);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath, 'api'));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath, 'api'), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'api/get_hello-new.json'),
         JSON.stringify(
           {
             statusCode: 401,
             headers: {'Content-Type': 'text/plain'},
-            body: 'hello'
+            body: 'hello',
           },
           null,
-          2
-        )
+          2,
+        ),
       );
     });
 
     it('should proxy request and save to new mock collection', async () => {
-      app = createServer({...options, record: 'http://record.to', collection: 'collection'});
+      app = await createServer({...options, record: 'http://record.to', collection: 'collection'});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'collection.mocks.js'),
-        'module.exports = {\n  "get_api#hello-new.txt": "hello"\n};\n'
+        'export default {\n  "get_api#hello-new.txt": "hello"\n};\n',
       );
     });
 
     it('should proxy request and save to existing mock collection', async () => {
       jest.resetModules();
-      setupMocks();
-      const mock = require('../lib/mock');
-      mock.getMocksFromCollections = jest.fn().mockReturnValueOnce(
-        Promise.resolve([
-          {
-            reqPath: 'api/exist',
-            methods: ['get', 'post'],
-            params: {check: 1},
-            data: {exist: true},
-            ext: 'json',
-            set: 'test',
-            isTemplate: false
-          }
-        ])
-      );
-      fs.pathExists = jest.fn().mockReturnValue(Promise.resolve(true));
+      await setupMocks();
 
-      app = createServer({...options, record: 'http://record.to', collection: 'collection'});
+      const originalMock = await import('../lib/mock.js');
+      jest.unstable_mockModule('../lib/mock.js', () => {
+        return {
+          ...originalMock,
+          getMocksFromCollections: jest.fn().mockReturnValueOnce(
+            Promise.resolve([
+              {
+                reqPath: 'api/exist',
+                methods: ['get', 'post'],
+                params: {check: 1},
+                data: {exist: true},
+                ext: 'json',
+                set: 'test',
+                isTemplate: false,
+              },
+            ]),
+          ),
+          default: {
+            ...originalMock,
+          },
+        };
+      });
+
+      const mock = await import('../lib/mock.js');
+      fs.access = jest.fn().mockReturnValue(Promise.resolve(true));
+
+      app = await createServer({...options, record: 'http://record.to', collection: 'collection'});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.pathExists).toHaveBeenCalled();
+      expect(fs.access).toHaveBeenCalled();
       expect(mock.getMocksFromCollections).toHaveBeenCalled();
-      expect(fs.mkdirp).toHaveBeenCalledWith(path.join(options.basePath));
+      expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'collection.mocks.js'),
-        'module.exports = {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n'
+        'export default {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n',
       );
     });
   });
 
   describe('should ignore files', () => {
     it('should ignore mock', async () => {
-      app = createServer({...options, ignore: '*version*'});
+      app = await createServer({...options, ignore: '*version*'});
       await request(app).get('/api/version').expect(404);
     });
 
     it('should ignore mock with absolute path', async () => {
-      app = createServer({...options, ignore: path.join(options.basePath, '*version*')});
+      app = await createServer({...options, ignore: path.join(options.basePath, '*version*')});
       await request(app).get('/api/version').expect(404);
     });
 
     it('should ignore 404', async () => {
-      app = createServer({...options, ignore: '404.html'});
+      app = await createServer({...options, ignore: '404.html'});
       await request(app).get('/not-found').set('Accept', 'text/html').expect(404).expect('Content-Type', /plain/);
     });
   });
@@ -514,27 +545,35 @@ describe('smoke server', () => {
     beforeEach(() => jest.resetModules());
 
     it('should add header via before hook', async () => {
-      app = createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
+      app = await createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
       await request(app).get('/api/hello').expect(200).expect('Hocus', 'pocus');
     });
 
     it('should fail after 1 request via before hook', async () => {
-      app = createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
+      app = await createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
       await request(app).get('/api/hello').expect(200);
 
       await request(app).get('/api/hello').expect(500);
     });
 
     it('should change response body via after hook', async () => {
-      app = createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
+      app = await createServer({...options, hooks: path.join(__dirname, '../test/hooks.js')});
       const response = await request(app).get('/api/hello').expect(200);
 
       expect(response.body).toEqual({text: 'hooked!'});
     });
 
     it('should ignore hooks file when searching for mocks', async () => {
-      app = createServer({basePath: path.join(__dirname, '../test'), hooks: path.join(__dirname, '../test/hooks.js')});
+      app = await createServer({
+        basePath: path.join(__dirname, '../test'),
+        hooks: path.join(__dirname, '../test/hooks.js'),
+      });
       await request(app).get('/hooks').expect(404);
+    });
+
+    it('should allow hooks using .cjs', async () => {
+      app = await createServer({...options, hooks: path.join(__dirname, '../test/hooks2.cjs')});
+      await request(app).get('/api/hello').expect(200).expect('Hocus', 'pocus');
     });
   });
 
@@ -578,7 +617,7 @@ describe('smoke server', () => {
     });
 
     it('should support mock set', async () => {
-      app = createServer({...options, set: '503'});
+      app = await createServer({...options, set: '503'});
       const response = await request(app).get('/api/ping').expect(503);
 
       expect(response.body.message).toEqual('Not available');
@@ -603,7 +642,7 @@ describe('smoke server', () => {
     });
 
     it('should support collection for 404 errors', async () => {
-      app = createServer({...options, notFound: '404.mocks.js'});
+      app = await createServer({...options, notFound: '404.mocks.js'});
       const response = await request(app).get('/api/not-found').expect(404).expect('Content-Type', /text/);
 
       expect(response.text).toEqual('Duh! Nothing there...');

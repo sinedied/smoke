@@ -2,11 +2,12 @@
   "name": "smoke",
   "version": "3.1.1",
   "description": "Simple yet powerful file-based mock server with recording abilities",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/sinedied/smoke.git"
   },
-  "main": "lib/smoke.js",
+  "exports": "./lib/smoke.js",
   "bin": {
     "smoke": "./bin/smoke",
     "smoke-conv": "./bin/smoke-conv"
@@ -14,8 +15,9 @@
   "scripts": {
     "lint": "xo",
     "lint:fix": "xo --fix",
-    "start": "smoke test/mocks",
-    "test": "xo && jest",
+    "start": "npx smoke test/mocks",
+    "test": "xo && npm run -s test:unit",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "release:check": "semantic-release --dry-run"
   },
   "keywords": [
@@ -41,23 +43,21 @@
     "body-parser": "^1.19.0",
     "cors": "2.8.5",
     "express": "^4.17.1",
-    "express-http-proxy": "^1.6.2",
-    "fs-extra": "^9.0.1",
-    "globby": "^11.0.1",
-    "import-fresh": "^3.2.1",
+    "express-http-proxy": "^2.1.1",
+    "globby": "^11.1.0",
     "lodash.template": "^4.5.0",
     "mime-types": "^2.1.27",
     "minimist": "^1.2.5",
     "morgan": "^1.10.0",
-    "multer": "^1.4.2",
-    "path-to-regexp": "^6.1.0"
+    "multer": "^1.4.5-lts.1",
+    "path-to-regexp": "^8.2.0"
   },
   "devDependencies": {
-    "jest": "^26.4.2",
-    "semantic-release": "^17.3.1",
-    "semantic-release-npm-github": "^1.0.4",
-    "supertest": "^6.0.1",
-    "xo": "^0.37.1"
+    "jest": "^30.0.0-alpha.6",
+    "semantic-release": "^24.2.0",
+    "semantic-release-npm-github": "^5.0.0",
+    "supertest": "^7.0.0",
+    "xo": "^0.60.0"
   },
   "xo": {
     "space": true,
@@ -71,10 +71,13 @@
     ],
     "rules": {
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/no-array-reduce": "off"
+      "unicorn/no-array-reduce": "off",
+      "unicorn/prefer-spread": "off",
+      "unicorn/no-await-expression-member": "off"
     }
   },
   "jest": {
+    "transform": {},
     "collectCoverageFrom": [
       "*.js",
       "lib/**/*.js"
@@ -91,7 +94,7 @@
     "branches": "main"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=18.0.0"
   },
   "files": [
     "smoke-cli.js",

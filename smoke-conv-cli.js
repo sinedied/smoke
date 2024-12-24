@@ -1,6 +1,6 @@
-const minimist = require('minimist');
-
-const {convert} = require('./lib/convert');
+import fs from 'node:fs';
+import minimist from 'minimist';
+import {convert} from './lib/convert.js';
 
 const help = `Usage: smoke-conv <input_mocks_or_collection> <output_file_or_folder>
 
@@ -19,7 +19,7 @@ Options:
   --help                  Show help
 `;
 
-async function run(args) {
+export async function run(args) {
   const options = minimist(args, {
     number: ['depth'],
     string: ['ignore'],
@@ -27,12 +27,12 @@ async function run(args) {
     alias: {
       v: 'version',
       i: 'ignore',
-      d: 'depth'
-    }
+      d: 'depth',
+    },
   });
 
   if (options.version) {
-    const pkg = require('./package.json');
+    const pkg = JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url), 'utf8'));
     return console.log(pkg.version);
   }
 
@@ -42,5 +42,3 @@ async function run(args) {
 
   await convert(options._[0], options._[1], options.ignore, options.depth);
 }
-
-module.exports = run;

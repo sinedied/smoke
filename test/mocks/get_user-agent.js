@@ -1,4 +1,4 @@
-module.exports = data => ({
+export default data => ({
   statusCode: 200,
   headers: {
     'Content-Type': 'text/plain',
