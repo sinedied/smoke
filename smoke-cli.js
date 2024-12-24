@@ -1,5 +1,6 @@
-const minimist = require('minimist');
-const {createServer, startServer} = require('./lib/smoke.js');
+import fs from 'node:fs';
+import minimist from 'minimist';
+import {createServer, startServer} from './lib/smoke.js';
 
 const help = `Usage: smoke [<mocks_folder>] [options]
 
@@ -25,7 +26,7 @@ Mock recording:
   -q, --save-query                  Save query parameters
 `;
 
-function run(args) {
+export async function run(args) {
   const options = minimist(args, {
     number: ['port', 'depth'],
     string: ['host', 'set', 'not-found', 'record', 'ignore', 'hooks', 'proxy', 'collection', 'allow-cors'],
@@ -49,7 +50,7 @@ function run(args) {
   });
 
   if (options.version) {
-    const pkg = require('./package.json');
+    const pkg = JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url), 'utf8'));
     return console.log(pkg.version);
   }
 
@@ -57,7 +58,7 @@ function run(args) {
     return console.log(help);
   }
 
-  const app = createServer({
+  const app = await createServer({
     basePath: options._[0],
     port: options.port,
     host: options.host,
@@ -80,5 +81,3 @@ function run(args) {
     startServer(app);
   }
 }
-
-module.exports = run;
