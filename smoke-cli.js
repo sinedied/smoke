@@ -1,7 +1,10 @@
 import fs from 'node:fs';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import minimist from 'minimist';
 import {createServer, startServer} from './lib/smoke.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const help = `Usage: smoke [<mocks_folder>] [options]
 
 Base options:
@@ -50,7 +53,7 @@ export async function run(args) {
   });
 
   if (options.version) {
-    const pkg = JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url), 'utf8'));
+    const pkg = JSON.parse(fs.readFileSync(join(__dirname, 'package.json'), 'utf8'));
     return console.log(pkg.version);
   }
 

@@ -1,6 +1,9 @@
 import process from 'node:process';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {jest} from '@jest/globals';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const originalFs = await import('node:fs/promises');
 jest.unstable_mockModule('node:fs/promises', async () => {
   return {
@@ -23,7 +26,7 @@ describe('smoke conversion tools', () => {
 
   beforeEach(async () => {
     jest.resetAllMocks();
-    process.chdir(new URL('..', import.meta.url).pathname);
+    process.chdir(join(__dirname, '..'));
     console.log('current directory:', process.cwd());
     convert = (await import('../lib/convert.js')).convert;
     fs = (await import('node:fs/promises')).default;
