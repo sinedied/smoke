@@ -1,3 +1,21 @@
+# [4.0.0](https://github.com/sinedied/smoke/compare/3.1.1...4.0.0) (2025-01-02)
+
+
+* chore!: update packages ([587f9de](https://github.com/sinedied/smoke/commit/587f9deb0d840aa23f3efc834a4073e69ef46662))
+
+
+### Features
+
+* add https option ([#30](https://github.com/sinedied/smoke/issues/30)) ([8a9f15f](https://github.com/sinedied/smoke/commit/8a9f15f182a7678a26d49dc71d85578c5518acd3))
+* make json parser non strict ([#31](https://github.com/sinedied/smoke/issues/31)) ([e31757f](https://github.com/sinedied/smoke/commit/e31757fc26c1ff0843e53d4e0bafc01bb778f2ca))
+* migrate to ESM ([20bdb07](https://github.com/sinedied/smoke/commit/20bdb07616c0a9adfedf938f6cb1bd6e5c77bbc9))
+
+
+### BREAKING CHANGES
+
+* JS mocks and collections now use ESM by default. To keep using your previous mocks and collections, you need to change their extension from `.js` to `.cjs`
+* requires Node >= 18
+
 ## [3.1.1](https://github.com/sinedied/smoke/compare/3.1.0...3.1.1) (2021-01-11)
 
 
