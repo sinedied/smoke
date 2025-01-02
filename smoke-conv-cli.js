@@ -1,7 +1,10 @@
 import fs from 'node:fs';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import minimist from 'minimist';
 import {convert} from './lib/convert.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const help = `Usage: smoke-conv <input_mocks_or_collection> <output_file_or_folder>
 
 Convert a single file mock collection to separate mock files and conversely.
@@ -32,7 +35,7 @@ export async function run(args) {
   });
 
   if (options.version) {
-    const pkg = JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url), 'utf8'));
+    const pkg = JSON.parse(fs.readFileSync(join(__dirname, 'package.json'), 'utf8'));
     return console.log(pkg.version);
   }
 
