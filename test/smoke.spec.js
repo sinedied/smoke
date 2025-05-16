@@ -17,7 +17,16 @@ jest.unstable_mockModule('node:fs/promises', async () => {
       ...originalFs,
       writeFile: jest.fn(),
       mkdir: jest.fn(),
+      access: jest.fn().mockRejectedValue(),
     },
+  };
+});
+
+const originalMock = await import('../lib/mock.js');
+jest.unstable_mockModule('../lib/mock.js', async () => {
+  return {
+    ...originalMock,
+    getMocksFromCollections: jest.fn().mockImplementation(originalMock.getMocksFromCollections),
   };
 });
 
@@ -277,6 +286,8 @@ describe('smoke server', () => {
   describe('should record mock', () => {
     let fs;
     let mockProxy;
+    let mock;
+    let recorder;
 
     async function setupMocks(statusCode = 200) {
       mockProxy = (await import('express-http-proxy')).default;
@@ -294,8 +305,8 @@ describe('smoke server', () => {
       });
 
       fs = (await import('node:fs/promises')).default;
-      fs.writeFile.mockReset();
-      fs.mkdir.mockReset();
+      mock = await import('../lib/mock.js');
+      recorder = await import('../lib/recorder.js');
     }
 
     beforeEach(async () => setupMocks());
@@ -522,6 +533,8 @@ describe('smoke server', () => {
         'export default {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n',
       );
     });
+
+    // TODO: append to CJS collection
   });
 
   describe('should ignore files', () => {
@@ -651,5 +664,7 @@ describe('smoke server', () => {
     it('should support file name with extension', async () => {
       await request(app).get('/cat2.jpg').expect(200).expect('Content-Type', /jpeg/);
     });
+
+    // TODO: cjs collections
   });
 });
