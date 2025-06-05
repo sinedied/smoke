@@ -287,7 +287,6 @@ describe('smoke server', () => {
     let fs;
     let mockProxy;
     let mock;
-    let recorder;
 
     async function setupMocks(statusCode = 200) {
       mockProxy = (await import('express-http-proxy')).default;
@@ -306,7 +305,6 @@ describe('smoke server', () => {
 
       fs = (await import('node:fs/promises')).default;
       mock = await import('../lib/mock.js');
-      recorder = await import('../lib/recorder.js');
     }
 
     beforeEach(async () => setupMocks());
