@@ -352,6 +352,9 @@ But don't worry! You don't have to regenerate or updates all your mock files, Sm
 
 If you prefer to migrate your existing mock files to the new ES module format, you can do so by updating the export syntax to use `export default` instead of `module.exports` in mock files and collections, and `export` the `before` and `after` hooks constant separately in hooks fles.
 
+> [!NOTE]
+> If you try to record new mocks into an existing collection in CommonJS format, the result will be saved into a new collection in ES modules format.
+
 ## Other mock servers
 
 If you cannot find what you need here, you might want to check out one of these other Node.js mock servers:
