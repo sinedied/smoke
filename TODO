@@ -1,3 +1,4 @@
+# Old
 - Fix accept matches with JS mocks (preload before matching final accept filter)
 - Improve performance with optional caching
 - Fix recording for raw assets (.js, .bin, fonts...)
