@@ -1,3 +1,11 @@
+## [4.1.1](https://github.com/sinedied/smoke/compare/4.1.0...4.1.1) (2025-06-25)
+
+
+### Bug Fixes
+
+* --logs option not working (fixes [#36](https://github.com/sinedied/smoke/issues/36)) ([d2b2cd9](https://github.com/sinedied/smoke/commit/d2b2cd9e1ae0ecf27238d127caad60e9fb0f3d41))
+* issue with js mocks and subpaths (fixes [#35](https://github.com/sinedied/smoke/issues/35)) ([5d9373d](https://github.com/sinedied/smoke/commit/5d9373d29ebd57ed10c88b20eb277b8491fae3d0))
+
 # [4.1.0](https://github.com/sinedied/smoke/compare/4.0.0...4.1.0) (2025-06-25)
 
 
