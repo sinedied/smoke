@@ -1,6 +1,6 @@
 {
   "name": "smoke",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Simple yet powerful file-based mock server with recording abilities",
   "type": "module",
   "repository": {

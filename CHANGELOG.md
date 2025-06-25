@@ -1,3 +1,15 @@
+# [4.1.0](https://github.com/sinedied/smoke/compare/4.0.0...4.1.0) (2025-06-25)
+
+
+### Bug Fixes
+
+* migrate to ESM ([f6bbe9e](https://github.com/sinedied/smoke/commit/f6bbe9ee373b2620a86768d52ed207617f0e1f5b))
+
+
+### Features
+
+* migrate from lodash.template to eta ([d99a47d](https://github.com/sinedied/smoke/commit/d99a47dde75a7bb928cdec077894495f4671c32d))
+
 # [4.0.0](https://github.com/sinedied/smoke/compare/3.1.1...4.0.0) (2025-01-02)
 
 
