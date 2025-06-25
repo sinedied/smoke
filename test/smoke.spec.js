@@ -110,7 +110,7 @@ describe('smoke server', () => {
 
     it('should load CJS mocks', async () => {
       const response = await request(app).get('/api/cjs');
-      expect(response.body).toEqual({ message: 'hello cjs' });
+      expect(response.body).toEqual({message: 'hello cjs'});
     });
   });
 
@@ -536,8 +536,6 @@ describe('smoke server', () => {
         'export default {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n',
       );
     });
-
-    // TODO: append to CJS collection
   });
 
   describe('should ignore files', () => {
