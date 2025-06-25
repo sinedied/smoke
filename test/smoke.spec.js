@@ -17,16 +17,7 @@ jest.unstable_mockModule('node:fs/promises', async () => {
       ...originalFs,
       writeFile: jest.fn(),
       mkdir: jest.fn(),
-      access: jest.fn().mockRejectedValue(),
     },
-  };
-});
-
-const originalMock = await import('../lib/mock.js');
-jest.unstable_mockModule('../lib/mock.js', async () => {
-  return {
-    ...originalMock,
-    getMocksFromCollections: jest.fn().mockImplementation(originalMock.getMocksFromCollections),
   };
 });
 
@@ -286,7 +277,6 @@ describe('smoke server', () => {
   describe('should record mock', () => {
     let fs;
     let mockProxy;
-    let mock;
 
     async function setupMocks(statusCode = 200) {
       mockProxy = (await import('express-http-proxy')).default;
@@ -304,7 +294,6 @@ describe('smoke server', () => {
       });
 
       fs = (await import('node:fs/promises')).default;
-      mock = await import('../lib/mock.js');
     }
 
     beforeEach(async () => setupMocks());
