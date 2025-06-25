@@ -1,5 +1,5 @@
 // Example mock collection
-module.exports = {
+export default {
   // Basic mock
   'api/get_ping.txt': 'pong!',
 

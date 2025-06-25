@@ -53,6 +53,7 @@ describe('smoke conversion tools', () => {
               "Content-Type": "application/octet-stream"
             }
           },
+          "get_test#mocks#api#cjs.cjs": () => '{ "message": "hello cjs" }',
           "get_test#mocks#api#hello__other.json": {
             "hello": "other"
           },
@@ -96,7 +97,7 @@ describe('smoke conversion tools', () => {
 
   describe('should convert a mock collection to separate mocks', () => {
     it('should convert a mock collection to separate mocks', async () => {
-      await convert('test/mocks/collection.mocks.cjs', 'mocks', null, null);
+      await convert('test/mocks/collection.mocks.js', 'mocks', null, null);
       expect(uniformizePaths(fs.writeFile.mock).calls).toMatchInlineSnapshot(`
         [
           [
@@ -160,17 +161,17 @@ describe('smoke conversion tools', () => {
     });
 
     it('should convert to separate mocks with depth 0', async () => {
-      await convert('test/mocks/collection.mocks.cjs', 'mocks', null, 0);
+      await convert('test/mocks/collection.mocks.js', 'mocks', null, 0);
       expect(uniformizePaths(fs.writeFile.mock).calls[0][0]).toEqual('mocks/get_api#ping.txt');
     });
 
     it('should convert to separate mocks with depth 1', async () => {
-      await convert('test/mocks/collection.mocks.cjs', 'mocks', null, 1);
+      await convert('test/mocks/collection.mocks.js', 'mocks', null, 1);
       expect(uniformizePaths(fs.writeFile.mock).calls[0][0]).toEqual('mocks/api/get_ping.txt');
     });
 
     it('should convert to separate mocks with max. depth', async () => {
-      await convert('test/mocks/collection.mocks.cjs', 'mocks', null, 10);
+      await convert('test/mocks/collection.mocks.js', 'mocks', null, 10);
       expect(uniformizePaths(fs.writeFile.mock).calls[0][0]).toEqual('mocks/api/ping/get_.txt');
     });
   });
