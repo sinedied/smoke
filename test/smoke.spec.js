@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import request from 'supertest';
-import {jest} from '@jest/globals';
+import {expect, jest} from '@jest/globals';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const options = {basePath: path.join(__dirname, '../test/mocks')};
@@ -58,6 +58,11 @@ describe('smoke server', () => {
       const response = await request(app).get('/api').expect(200);
 
       expect(response.body).toEqual(Buffer.from('v1\n'));
+    });
+
+    it('should allow subpath for JS mocks', async () => {
+      const response = await request(app).get('/api/random/anypath').expect(200);
+      expect(response.body).toEqual(expect.any(Number));
     });
   });
 
