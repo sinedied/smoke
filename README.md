@@ -240,13 +240,13 @@ In that case, your JS module is expected to export a function that take an input
 
 Example:
 ```js
-module.exports = (data) => `Your user agent is: ${data.headers['user-agent']}`;
+export default (data) => `{ "data": "Your user agent is: ${data.headers['user-agent']}" }`;
 ```
 
 Note that by default, JS mocks use `application/json` for the response content type. If you want to use another type,
 you must set the `Content-Type` header yourself, for example:
 ```js
-module.exports = data => ({
+export default data => ({
   statusCode: 200,
   headers: {
     'Content-Type': 'text/plain'
@@ -286,10 +286,8 @@ returned by the server.
 
 To hook on your own middlewares, use the `--hooks` to specify a JavaScript module with exports setup like this:
 ```js
-module.exports = {
-  before: [], // middlewares to be executed before the request is processed
-  after: []   // middlewares to be executed after the request has been processed
-};
+export const before = []; // middlewares to be executed before the request is processed
+export const after = [];  // middlewares to be executed after the request has been processed
 ```
 
 Middlewares executed before the request is processed can be used to bypass regular mock response, for example to
@@ -318,7 +316,7 @@ To enable CORS, pass the hosts that you want to allow to `-o` or `--allow-cors` 
 
 You can regroup multiple mocks in a special single file with the extension `.mocks.js`, using this format:
 ```js
-module.exports = {
+export default {
   '<file_name>': '<file_content>' // can be a string, an object (custom response) or a function (JavaScript mock)
 };
 ```
@@ -345,6 +343,14 @@ string.
 
 :warning: There is a limitation regarding JavaScript mocks: only the exported function will be converted for a given
 mock, meaning that if you have non-exported functions, variables or imports they will be lost during the conversion.
+
+## Migration from v1/v2/v3 to v4
+
+If you are migrating from a previous version of Smoke, you need to be aware that the default module format has changed: earlier version used CommonJS modules, while v4 uses ES modules by default.
+
+But don't worry! You don't have to regenerate or updates all your mock files, Smoke will still support the CommonJS format for backward compatibility, though you need to rename all your `*.js` mocks, collections and hooks files to use the `.cjs` extension instead of `.js`.
+
+If you prefer to migrate your existing mock files to the new ES module format, you can do so by updating the export syntax to use `export default` instead of `module.exports` in mock files and collections, and `export` the `before` and `after` hooks constant separately in hooks fles.
 
 ## Other mock servers
 
