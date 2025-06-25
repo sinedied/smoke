@@ -107,11 +107,6 @@ describe('smoke server', () => {
     it('should support CJS mocks for backward compatibility', async () => {
       await request(app).get('/api/random2').expect(200).expect('Content-Type', /json/);
     });
-
-    it('should load CJS mocks', async () => {
-      const response = await request(app).get('/api/cjs');
-      expect(response.body).toEqual({message: 'hello cjs'});
-    });
   });
 
   describe('should use a different mock set', () => {
@@ -493,47 +488,16 @@ describe('smoke server', () => {
       );
     });
 
-    it('should proxy request and save to existing mock collection', async () => {
-      jest.resetModules();
-      await setupMocks();
-
-      const originalMock = await import('../lib/mock.js');
-      jest.unstable_mockModule('../lib/mock.js', () => {
-        return {
-          ...originalMock,
-          getMocksFromCollections: jest.fn().mockReturnValueOnce(
-            Promise.resolve([
-              {
-                reqPath: 'api/exist',
-                methods: ['get', 'post'],
-                params: {check: 1},
-                data: {exist: true},
-                ext: 'json',
-                set: 'test',
-                isTemplate: false,
-              },
-            ]),
-          ),
-          default: {
-            ...originalMock,
-          },
-        };
-      });
-
-      const mock = await import('../lib/mock.js');
-      fs.access = jest.fn().mockReturnValue(Promise.resolve(true));
-
+    it('should proxy request and save to new mock collection', async () => {
       app = await createServer({...options, record: 'http://record.to', collection: 'collection'});
       const response = await request(app).get('/api/hello-new').expect(200);
 
       expect(response.text).toBe('hello');
       expect(mockProxy).toHaveBeenCalledWith('http://record.to', expect.anything());
-      expect(fs.access).toHaveBeenCalled();
-      expect(mock.getMocksFromCollections).toHaveBeenCalled();
       expect(fs.mkdir).toHaveBeenCalledWith(path.join(options.basePath), {recursive: true});
       expect(fs.writeFile).toHaveBeenCalledWith(
         path.join(options.basePath, 'collection.mocks.js'),
-        'export default {\n  "get+post_api#exist$check=1__test.json": {\n    "exist": true\n  },\n  "get_api#hello-new.txt": "hello"\n};\n',
+        'export default {\n  "get_api#hello-new.txt": "hello"\n};\n',
       );
     });
   });

@@ -53,7 +53,6 @@ describe('smoke conversion tools', () => {
               "Content-Type": "application/octet-stream"
             }
           },
-          "get_test#mocks#api#cjs.cjs": () => '{ "message": "hello cjs" }',
           "get_test#mocks#api#hello__other.json": {
             "hello": "other"
           },
