@@ -107,6 +107,11 @@ describe('smoke server', () => {
     it('should support CJS mocks for backward compatibility', async () => {
       await request(app).get('/api/random2').expect(200).expect('Content-Type', /json/);
     });
+
+    it('should load CJS mocks', async () => {
+      const response = await request(app).get('/api/cjs');
+      expect(response.body).toEqual({ message: 'hello cjs' });
+    });
   });
 
   describe('should use a different mock set', () => {
@@ -663,6 +668,10 @@ describe('smoke server', () => {
       await request(app).get('/cat2.jpg').expect(200).expect('Content-Type', /jpeg/);
     });
 
-    // TODO: cjs collections
+    it('should work with CJS collections', async () => {
+      const response = await request(app).get('/api/ping2').expect(200).expect('Content-Type', /text/);
+
+      expect(response.text).toEqual('pong cjs');
+    });
   });
 });
