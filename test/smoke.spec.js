@@ -259,6 +259,15 @@ describe('smoke server', () => {
           expect(body.message).toBe('JSON response');
         });
     });
+
+    it('should allow files without extension to match any accept header', async () => {
+      const response = await request(app)
+        .get('/api')
+        .set('Accept', 'application/json') // This accept header should be ignored
+        .expect(200);
+
+      expect(response.body).toEqual(Buffer.from('v1\n'));
+    });
   });
 
   describe('should handle 404', () => {
