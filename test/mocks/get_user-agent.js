@@ -1,8 +1,8 @@
-export default data => ({
+export default (data) => ({
   statusCode: 200,
   headers: {
     'Content-Type': 'text/plain',
-    'Some-Header': 'Hey there!'
+    'Some-Header': 'Hey there!',
   },
-  body: `Your user agent is: ${data.headers['user-agent']}`
+  body: `Your user agent is: ${data.headers['user-agent']}`,
 });

@@ -1,4 +1,4 @@
-module.exports = data => ({
+module.exports = (data) => ({
   message: `Pong ${data.body.message}`,
-  data
+  data,
 });

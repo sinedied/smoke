@@ -18,7 +18,7 @@ export default {
   // Define mock set with custom response
   'get_api#ping__503.json': {
     statusCode: 503,
-    body: {message: 'Not available'}
+    body: {message: 'Not available'},
   },
 
   // Mock with query param
@@ -29,7 +29,7 @@ export default {
     statusCode: 200,
     headers: {'Content-Type': 'text/plain'},
     body: 'cG9uZyA2NCE=',
-    buffer: true
+    buffer: true,
   },
 
   // Mock that conflicts with existing file mock
