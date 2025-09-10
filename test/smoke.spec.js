@@ -214,6 +214,51 @@ describe('smoke server', () => {
         .expect('Content-Type', /application\/octet-stream/)
         .expect(200);
     });
+
+    it('should allow JS mocks to handle accept headers themselves', async () => {
+      await request(app)
+        .get('/accept')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /application\/json/)
+        .expect(200)
+        .expect((res) => {
+          const body = JSON.parse(res.text);
+          expect(body.type).toBe('json');
+        });
+      await request(app)
+        .get('/accept')
+        .set('Accept', 'text/html')
+        .expect('Content-Type', /text\/html/)
+        .expect(200)
+        .expect('<html><body>HTML response</body></html>');
+      await request(app)
+        .get('/accept')
+        .set('Accept', 'image/png')
+        .expect('Content-Type', /text\/plain/)
+        .expect(404)
+        .expect('Not Found');
+    });
+
+    it('should prefer non-JS mocks when they match accept header', async () => {
+      // When both JS and non-JS mocks exist, non-JS should be preferred if it matches accept header
+      await request(app)
+        .get('/accept')
+        .set('Accept', 'text/plain')
+        .expect('Content-Type', /text\/plain/)
+        .expect(200)
+        .expect('This is a text file\n');
+
+      // But JS mock should still be used when it doesn't match
+      await request(app)
+        .get('/accept')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /application\/json/)
+        .expect(200)
+        .expect((res) => {
+          const body = JSON.parse(res.text);
+          expect(body.message).toBe('JSON response');
+        });
+    });
   });
 
   describe('should handle 404', () => {
