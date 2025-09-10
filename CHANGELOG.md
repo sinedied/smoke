@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/sinedied/smoke/compare/4.1.2...4.1.3) (2025-09-10)
+
+
+### Bug Fixes
+
+* allow files without extension to match any accept header ([df8fba5](https://github.com/sinedied/smoke/commit/df8fba5ba2b29751de39b9e084cdf54584521474))
+
 ## [4.1.2](https://github.com/sinedied/smoke/compare/4.1.1...4.1.2) (2025-09-10)
 
 
