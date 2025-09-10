@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/sinedied/smoke/compare/4.1.1...4.1.2) (2025-09-10)
+
+
+### Bug Fixes
+
+* allow JS mocks to work with accept headers (fixes [#28](https://github.com/sinedied/smoke/issues/28)) ([4020bb7](https://github.com/sinedied/smoke/commit/4020bb7841b4cafc20395b54be67b79c9f7365ea))
+
 ## [4.1.1](https://github.com/sinedied/smoke/compare/4.1.0...4.1.1) (2025-06-25)
 
 
