@@ -119,6 +119,26 @@ describe('smoke server', () => {
 
       expect(response.body).toEqual({hello: 'world'});
     });
+
+    it('should use mock set with folder structure (admin set)', async () => {
+      app = await createServer({...options, set: 'admin'});
+      const response = await request(app).get('/users');
+
+      expect(response.body).toEqual({username: 'admin', role: 'admin'});
+    });
+
+    it('should use mock set with folder structure (user set)', async () => {
+      app = await createServer({...options, set: 'user'});
+      const response = await request(app).get('/users');
+
+      expect(response.body).toEqual({username: 'john', role: 'user'});
+    });
+
+    it('should use default mock when no set is specified with folder structure', async () => {
+      const response = await request(app).get('/users');
+
+      expect(response.body).toEqual({username: 'default', role: 'guest'});
+    });
   });
 
   describe('should handle custom responses', () => {
